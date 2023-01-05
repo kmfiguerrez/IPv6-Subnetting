@@ -322,62 +322,94 @@ export default class Prefix {
     static hexToBin (hex: string): string {
         /**
          * This method will convert hexadecimal(s) to binaries.
-         * It will return an array of binaries to make it readable
-         * when multiple hexadecimals are passed and to leave you 
-         * options on what can you do with it.
+         * This method will use four bits to output each hex.
         */        
 
-        // First, convert hex to number.
-        const dec = parseInt(hex, 16);
-
-        let bin: string = "";
+        let binaries: string = "";
 
         // Because numbers greater than (2 ** 53 - 1) loses precision 
-        // we have to convert individual hex from input rather than
-        // the whole hexadecimals in one go.
-        const isSafeInteger = Number.isSafeInteger(dec);
+        // we have to convert individual hex from input if multiple hex 
+        // are given rather than the whole hexadecimals in one go.        
 
-        if (isSafeInteger) {
-            bin = dec.toString(2);
-        }
-        else {
-            // Convert individual hex to binaries.
-            for (const char of hex) {
-                // Convert first to number then to binaries.
-                bin = parseInt(char, 16).toString(2);
-            }
-        }
+        for (const char of hex) {            
+            // First, convert hex to number.
+            const dec = parseInt(char, 16);
+            
+            // then from number to binaries.
+            const bin = dec.toString(2);
+
+            // Because toString method does not add leading zeros
+            // we have to prepend leading zeros.
+            const zerosToPrepend = 4 - bin.length;
+            binaries += "0".repeat(zerosToPrepend) + bin;            
+        }        
         
-        // Because toString method does not add leading zeros
-        // we have to prepend leading zeros.
-        const zerosToPrepend = 4 * hex.length - bin.length;
-        bin = "0".repeat(zerosToPrepend) + bin;
-        
-        // Finally return bin.
-        return bin;
+        // Finally return binaries.
+        return binaries;
     }
 
 
     static binToHex (bin: string): string {
         /**
          * This method will convert binaries to hexadecimal(s).
+         * This method accepts a minimun of a 4-bit binaries.
          */
 
-        // Convert binaries to number then to bigint.
+        let hex: string = "";
+
+        // First, convert binaries to number(decimal). 
         const dec = parseInt(bin, 2)
 
-        // Because numbers greater than 2 ** 54 loses precision 
-        // we have to subtact 1n.
-        const numOfBits = bin.length
-        const decn = numOfBits > 54 ? BigInt(dec) -1n : BigInt(dec);
+        // Because numbers greater than (2 ** 53 - 1) lose precision.
+        // We should have different ways of solving it.
+        const isNumberSafe = Number.isSafeInteger(dec);
 
-        // Convert bigint to hexadecimals.
-        const hex = decn.toString(16)
+        if (isNumberSafe) {
+            // If the input binaries convert to safe numbers, then convert them
+            // to hexadecimal(s) directly.
+            hex = dec.toString(16);
+            return hex;
+        }
+        else {
+            // Otherwise not safe, means there are more than 52 bits of binaries.
+            // The safest max number of bits we can convert is 52 bits(13 hexadecimals).
+            // Safe binary digits is less than or equal to 52.
 
-        // Finally return hexadecimals.
-        return hex;
+            // Convert it to array.
+            const binArray = bin.split("");
+            const maxSafeBitsCount = Math.floor(bin.length / 52); // Number of 52 bits.
+            const hexArray: Array<string> = [] 
+            
+            // Slice 52 bits from binArray maxSafeBitsCount times
+            // from right to left.
+            for (let index = 0; index < maxSafeBitsCount; index++) {
+                // Start index to slice.
+                const startIndex = binArray.length - 52;
+                // Up to last element after the start index.
+                const deleteRemainingElems = binArray.length;
+                // Remove 52 bits from binArray.
+                const maxSafeBits = binArray.splice(startIndex, deleteRemainingElems);
+                // Turn removed bits into string then to number.
+                const num = parseInt(maxSafeBits.join(""), 2);
+                // then to hexadecimals as string.
+                // Because putting a series of 0s to toString method leaves you
+                // a single 0 we have to give it 13 0s for 52 bits of 0s.
+                const hex = num === 0 ? "0000000000000" : num.toString(16);
+                hexArray.unshift(hex);
+                console.log(startIndex)
+            }
+
+            // Then add the remaining elements(binaries) in binArray as hexadecimals 
+            // to hexArray if there are any left.
+            if (binArray.length > 0) hexArray.unshift(parseInt(binArray.join(""), 2).toString(16));
+            // console.log(hexArray)
+
+            // Then join them in one singe string and return it.
+            return hexArray.join("");
+        }           
     }
 
+    
     static ipv6ToBin (ipv6Address: string): string[] {
         /**
          * This method will convert ipv6 address into contiguous binaries.
