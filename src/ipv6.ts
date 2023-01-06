@@ -321,8 +321,8 @@ export default class Prefix {
 
     static hexToBin (hex: string): string {
         /**
-         * This method will convert hexadecimal(s) to binaries.
-         * This method will use four bits to output each hex.
+         * This method converts hexadecimal(s) to binaries.
+         * This method uses four bits to output each hex.
         */        
 
         let binaries: string = "";
@@ -352,36 +352,45 @@ export default class Prefix {
     static binToHex (bin: string): string {
         /**
          * This method will convert binaries to hexadecimal(s).
-         * This method accepts a minimun of a 4-bit binaries.
+         * This method assumes that the input binaries is a multiple of 4
+         * to get accurate results.
          */
 
-        let hex: string = "";
+        let hexadecimals: string = "";   // To be returned.
+        const toHex: Array<string> = []; // Binaries to be converted to hexadecimals.
 
-        // First, convert binaries to number(decimal). 
-        const dec = parseInt(bin, 2)
+        /*
+         Because numbers greater than (2 ** 53 - 1) lose precision.
+         We should have different ways of converting binaries to hexadecimals.
+         Safe binary digits is less than or equal to 52.
 
-        // Because numbers greater than (2 ** 53 - 1) lose precision.
-        // We should have different ways of solving it.
-        const isNumberSafe = Number.isSafeInteger(dec);
+         Algorithm to convert binaries to hexadecimals.
+         1. Determine first if the input binaries output to safe integers,
+            if it does then add them directly to toHex array.
+            If the input does not ouput to safe integers, then segment off
+            the safe binary digits and add them individually to toHex array.
+         2. Convert binaries elements in toHex array to hexadecimals and 
+            append them to hexadecimals variable to be returned.            
+        */
 
+        // First, test the input binaries if it output to safe integers. 
+        const num = parseInt(bin, 2);
+        const isNumberSafe = Number.isSafeInteger(num);
+
+        // Then add them to toHex array.
         if (isNumberSafe) {
-            // If the input binaries convert to safe numbers, then convert them
-            // to hexadecimal(s) directly.
-            hex = dec.toString(16);
-            return hex;
+            // If the input binaries convert to safe numbers, then add it to toHex array.            
+            toHex.push(bin);
         }
         else {
             // Otherwise not safe, means there are more than 52 bits of binaries.
-            // The safest max number of bits we can convert is 52 bits(13 hexadecimals).
-            // Safe binary digits is less than or equal to 52.
+            // The safest max number of bits we can convert is 52 bits(13 hexadecimals).            
 
-            // Convert it to array.
+            // Convert input binaries to array.
             const binArray = bin.split("");
             const maxSafeBitsCount = Math.floor(bin.length / 52); // Number of 52 bits.
-            const hexArray: Array<string> = [] 
             
-            // Slice 52 bits from binArray maxSafeBitsCount times
-            // from right to left.
+            // Slice 52 bits from binArray, maxSafeBitsCount times from right to left.            
             for (let index = 0; index < maxSafeBitsCount; index++) {
                 // Start index to slice.
                 const startIndex = binArray.length - 52;
@@ -389,24 +398,82 @@ export default class Prefix {
                 const deleteRemainingElems = binArray.length;
                 // Remove 52 bits from binArray.
                 const maxSafeBits = binArray.splice(startIndex, deleteRemainingElems);
-                // Turn removed bits into string then to number.
-                const num = parseInt(maxSafeBits.join(""), 2);
-                // then to hexadecimals as string.
-                // Because putting a series of 0s to toString method leaves you
-                // a single 0 we have to give it 13 0s for 52 bits of 0s.
-                const hex = num === 0 ? "0000000000000" : num.toString(16);
-                hexArray.unshift(hex);
-                console.log(startIndex)
+                // Then add them toHex as string elements of an array to toHex.
+                toHex.unshift(maxSafeBits.join(""));                                                
             }
 
-            // Then add the remaining elements(binaries) in binArray as hexadecimals 
-            // to hexArray if there are any left.
-            if (binArray.length > 0) hexArray.unshift(parseInt(binArray.join(""), 2).toString(16));
-            // console.log(hexArray)
+            /*
+             Then add the remaining elements(binaries) in binArray
+             to toHex array if there are any left.
+            */
+            if (binArray.length > 0) {
+                // Turn them into string then add them to toHex.
+                toHex.unshift(binArray.join(""));                                
+            }                        
+        }
+        
+        /*
+         Then convert binaries elements in toHex array to hexadecimals.
+         and append the result(s) to hexadecimals variable.
+        */
+        for (const binaries of toHex) {
+            // Convert binaries to number(decimal).
+            const dec = parseInt(binaries, 2);
 
-            // Then join them in one singe string and return it.
-            return hexArray.join("");
-        }           
+            /*
+             Check because parseInt method removes leading zeros and passing
+             a series of 0s to parseInt method leaves you a single 0, we have
+             to modify the output to conform to the ratio of hex to binaries
+             which is 1:4 respectively.
+            */
+
+            let hexZerosCount: number;
+            let hexZeros: string;
+            
+            // If safe bits are all 0s.
+            if (dec === 0) {                
+                // Make one hex zero for every 4 bits of 0s.
+                hexZerosCount = Math.ceil(binaries.length / 4);
+                hexZeros = "0".repeat(hexZerosCount);
+                // Then append the result to hexadecimals variable.
+                hexadecimals += hexZeros;
+            } else {
+                // Otherwise safe bits aren't all 0s.
+
+                /*
+                 Check if leading zeros are omitted.
+                 If binaries.length > nonZeroNibbleBits, then leading zeros are omitted.
+                */
+                const nonZeroNibbleBits = dec.toString(16).length * 4; // Binary digits.                
+                
+                // If there's no leading zeros
+                if (binaries.length < nonZeroNibbleBits) {
+                    hexadecimals += dec.toString(16);                    
+                }
+                                
+                /*
+                 Otherwise leading zeros are ommitted.
+                 Prepend the leading zeros to non-zero hexadecimals
+                 then append them to hexadecimals variable to be returned.
+                */
+
+                // Convert binaries to array.
+                const binArray = binaries.split("");
+
+                // Remove the non-zero nibbles from right to left.
+                const nonZeroHexsBins = binArray.splice(binArray.length - nonZeroNibbleBits, binArray.length).join("");
+                
+                // Get the leading zeros.
+                hexZerosCount = Math.ceil(binArray.length / 4);
+                hexZeros = "0".repeat(hexZerosCount);
+                
+                // Append them to hexadecimals variable.
+                hexadecimals += hexZeros + parseInt(nonZeroHexsBins, 2).toString(16);
+            }                                                            
+        }
+
+        // Finally return hexadecimals.
+        return hexadecimals;
     }
 
     
