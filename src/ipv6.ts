@@ -173,10 +173,8 @@ export default class Prefix {
         /**
          * This method will abbreviate ipv6 address by removing leading zeros and          
          * substitute double colons(::) into two or more consecutive segments of all zeros.         
-         * This method assumes that the ipv6 address input is in an expanded form.         
          */
         
-
         // Make sure that the input is in unabbreviated form.
         // Turn ipv6 address input into an array of string. 
         let ipv6Array: Array<string> = this.expand(ipv6Address).split(":");                
@@ -203,6 +201,7 @@ export default class Prefix {
                     newSegment = "0";
                 }
             }
+
             return newSegment;
         })
 
@@ -294,7 +293,7 @@ export default class Prefix {
             // * is inserted to mark for double colon(::). 
             ipv6Array.splice(instanceIndex, instanceLength, "*");
         }
-        console.log(ipv6Array)
+
         // Write the ipv6 address in a colon notation.
         let ipv6 = "";
         for (let index = 0; index < ipv6Array.length; index++) {
@@ -313,7 +312,7 @@ export default class Prefix {
                 ipv6 += ":";    
             }                       
         }
-        console.log(ipv6);
+
         // Finally return ipv6 as string.
         return ipv6;
     }
@@ -322,15 +321,17 @@ export default class Prefix {
     static hexToBin (hex: string): string {
         /**
          * This method converts hexadecimal(s) to binaries.
-         * This method uses four bits to output each hex.
+         * This method uses four bits to output each hex
+         * and does not omit leading zeros.
         */        
 
         let binaries: string = "";
 
-        // Because numbers greater than (2 ** 53 - 1) loses precision 
-        // we have to convert individual hex from input if multiple hex 
-        // are given rather than the whole hexadecimals in one go.        
-
+        /*
+         Because numbers greater than (2 ** 53 - 1) loses precision 
+         we have to convert individual hex from input if multiple hex 
+         are given rather than the whole hexadecimals in one go.        
+        */
         for (const char of hex) {            
             // First, convert hex to number.
             const dec = parseInt(char, 16);
@@ -352,6 +353,7 @@ export default class Prefix {
     static binToHex (bin: string): string {
         /**
          * This method will convert binaries to hexadecimal(s).
+         * This method does not omit leading zeros.
          * This method assumes that the input binaries is a multiple of 4
          * to get accurate results.
          */
@@ -413,7 +415,7 @@ export default class Prefix {
         }
         
         /*
-         Then convert binaries elements in toHex array to hexadecimals.
+         Second convert binaries elements in toHex array to hexadecimals.
          and append the result(s) to hexadecimals variable.
         */
         for (const binaries of toHex) {
@@ -497,6 +499,37 @@ export default class Prefix {
 
         // Finally return an array of binaries.
         return segmentsArray;
+    }
+
+    static binToIPv6 (bin: string): string {
+        /**
+         * This method converts ipv6 written in contiguous binaries into ipv6 written
+         * in hexadecimals and in a colon notation.
+         * This method assumes that the binaries is a complete 128 bits.
+         */
+
+        // Convert binaries to hexadecimals.
+        let hexs = this.binToHex(bin);
+        let ipv6Address = ""; // To be returned.
+        let nibbleCount = 0;
+
+        // Then turn them in a ipv6 address format which is in a colon notation.
+        for (let index = 0; index < hexs.length; index++) {
+            const element = hexs[index];
+            // Add a colon every four hex but not at the end of the addresss.
+            if (nibbleCount === 4 && index !== hexs.length - 1) {
+                ipv6Address += ":"
+                // Reset every count.
+                nibbleCount = 0;                
+            }
+
+            ipv6Address += element;
+
+            nibbleCount++;   
+        }
+
+        // Finally return ipv6 address.
+        return ipv6Address;
     }
 
 
