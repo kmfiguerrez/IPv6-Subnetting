@@ -712,36 +712,7 @@ export default class Prefix {
             return new Error(error.message);
         }         
     }
-
-
-    static decToBin (num: number, bits: number=0): string {
-        /**
-         * This method converts number(decimal) to binaries.
-         * The second arguments is used to include leading zeros.
-         */
-
-        let binaries: string;
-
-        // If bits is ignored then convert num as it is.
-        if (bits === 0) {
-            // Convert number to binaries.
-            binaries = num.toString(2);
-            return binaries;
-        }
-
-        /*
-         Otherwise second arguments is assumed used(bits > 0)
-         add leading zeros.
-        */
-        // Convert to binaries.    
-        binaries = num.toString(2);
-        // Get leading zeros.
-        const zerosToPrepend = bits - binaries.length;        
-        // Add leading zeros.
-        binaries = "0".repeat(zerosToPrepend) + binaries;
-
-        return binaries;
-    }
+    
 
     static bitsToBin (bits: number, addressPortion: string): string | Error{
         /**
