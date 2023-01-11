@@ -1,32 +1,33 @@
-interface interfaceID {
-    prefixID: string,
-    firstUsableAddress: string,
-    lastUsableAddress: string
+interface InterfaceID {
+    bits: number;
+    prefix: string;
+    firstUsableAddress: string;
+    lastUsableAddress: string;
 }
 
 export default class Prefix {
     subnetNumber: number = 0;
     networkPortion: string = "";
-    subnetkPortion: string = "";    
+    subnetPortion: string = "";    
     newPrefixLength: number = 0;
-    prefixID: string = "";
+    prefix: string = "";
     firstUsableAddress: string = "";
     lastUsableAddress: string = "";
-    interfaceIDPortion: interfaceID = {prefixID:"", firstUsableAddress:"", lastUsableAddress:""};
+    interfaceIDPortion: InterfaceID = {bits:0, prefix:"", firstUsableAddress:"", lastUsableAddress:""};
 
     constructor (){
         this.subnetNumber;
         this.networkPortion;
-        this.subnetkPortion;
+        this.subnetPortion;
         this.interfaceIDPortion;
         this.newPrefixLength;
-        this.prefixID;
+        this.prefix;
         this.firstUsableAddress;
         this.lastUsableAddress;        
     }
     
 
-    static ipv6Format (ipv6Address: string, prefixLength: number=0): boolean {
+    static ipv6Format (ipv6Address: string): boolean {
         /**
          * This method will check user input of ipv6 address.
          * This method has an ordered sequence of checkings.
@@ -50,7 +51,7 @@ export default class Prefix {
         }
 
         // A single colon cannot be at the beginning nor at the end of an ipv6 address.
-        if (ipv6Address[0] === ":" || (ipv6Address[ipv6Address.length - 1] === ":" && ipv6Address.slice(-2) !== "::")) { 
+        if ((ipv6Address[0] === ":" && ipv6Address.slice(0,2) !== "::") || (ipv6Address[ipv6Address.length - 1] === ":" && ipv6Address.slice(-2) !== "::")) { 
             console.log("A single colon cannot be at the beginning nor at the end.");
             return false;
         }
@@ -118,14 +119,8 @@ export default class Prefix {
             }
         }
 
-        // Check for prefix length.
-        if (prefixLength <= 0 || prefixLength >= 128) {
-            console.log("Invalid Prefix Length!");
-            return false;
-        }
-
         // Finally return true if it passed all checkings.
-        console.log("Valid!");
+        // console.log("Valid!");
         return true;        
     }
 
@@ -141,8 +136,9 @@ export default class Prefix {
             if (this.ipv6Format(ipv6Address) === false) throw new Error("Invalid IPv6 format!");
             
             let ipv6Array: Array<string> = [];
-
-            // First, Check if it needs to add leading zeros.   
+            
+            // First, Check if it needs to add leading zeros.
+            // This part also will not add empty string caused by :: when split.
             for (const segment of ipv6Address.split(":")) {            
                 if (segment.length !== 4 && segment.length !== 0) {
                     const zerosToPrepend = 4 - segment.length; 
@@ -161,15 +157,14 @@ export default class Prefix {
                 while(ipv6Array.length !== 8) {
                     ipv6Array.push("0000");                                
                 }                               
-            }   
-
+            }               
             // Check if double colon(::) exists somewhere not at the end.
             // Insert segments of all zeros until there are eight sets of segments to complete the address.
-            else if (ipv6Address.includes("::")) {
+            else if (ipv6Address.includes("::")) {                
                 // Turn ipv6 address to an array and find the index of an empty string.
                 const toInsertAt = ipv6Address.split(":").indexOf("");
                 // Keep adding until there's a total of 8 segments.
-                while(ipv6Array.length !== 8) {
+                while(ipv6Array.length !== 8) {                    
                     ipv6Array.splice(toInsertAt, 0, "0000");
                 }
             }        
@@ -289,9 +284,7 @@ export default class Prefix {
                             secondInstanceLength++;
                         }
                     }
-                    console.log(ipv6Array)
-                    console.log("first", firstInstanceLength)
-                    console.log("second", secondInstanceLength)
+         
                     // Then compare the two lengths.            
                     if (firstInstanceLength > secondInstanceLength) {
                         // * is inserted to mark for double colon(::).
@@ -324,27 +317,29 @@ export default class Prefix {
                     // * is inserted to mark for double colon(::). 
                     ipv6Array.splice(instanceIndex, instanceLength, "*");
                 }
-
-                // Write the ipv6 address in a colon notation.                
-                for (let index = 0; index < ipv6Array.length; index++) {
-                    const element = ipv6Array[index];
-
-                    if (element === "*") {
-                        ipv6 += ":"
-                        continue
-                    }
-
-                    ipv6 += element;
-                    
-                    // Do not add colon to the end of an array if the last
-                    // element is not part of the series of segments of 0s.
-                    if (index !== (ipv6Array.length - 1)) {
-                        ipv6 += ":";    
-                    }                       
+                // console.log(ipv6Array)
+                // Write the ipv6 address in a colon notation.
+                const doubleColonIndex = ipv6Array.indexOf("*");
+                // Note that * depicts ::
+                if (doubleColonIndex === 0) {
+                    // If * occurs at the beginning.
+                    // Replace it with :
+                    ipv6Array.splice(0, 1, ":");
                 }
+                else if (doubleColonIndex === ipv6Array.length - 1) {
+                    // If * occurs at the end.
+                    // Replace it with :
+                    ipv6Array.splice(-1, 1, ":");
+                }
+                else {
+                    // If * exists somewhere neither at the beginning nor end.
+                    // Replace it with empty string.
+                    ipv6Array.splice(doubleColonIndex, 1, "");
+                }
+                // console.log(ipv6Array)
 
                 // Finally return ipv6 as string.
-                return ipv6;
+                return ipv6 = ipv6Array.join(":");
 
             } else {
                 /*
@@ -365,7 +360,7 @@ export default class Prefix {
 
     static isHex(hex: string): boolean {
         /**
-         * This method checks if a given character is a 
+         * This method checks if a given character(s) is a 
          * valid hex character.
          */
 
@@ -374,13 +369,38 @@ export default class Prefix {
             "a", "b", "c", "d", "e", "f",
         ]
 
-        // If not valid then return false.
-        if (!validHexChars.includes(hex.toLocaleLowerCase())) {                    
-            return false;
+        for (const char of hex) {
+            const isValid = validHexChars.includes(char.toLocaleLowerCase());
+            
+            // If not valid then return false.
+            if (!isValid) {                    
+                return false;
+            }
         }
-
+        
         // Otherwise valid.
         return true
+    }
+
+    static isBinary (bin: string): boolean {
+        /**
+         * This method checks if given character(s) is a valid binary
+         * characters.
+         */
+
+        const validBinaryChars = ["0", "1"];
+        
+        for (const bit of bin) {
+            const isValid = validBinaryChars.includes(bit);
+
+            // If not valid return false.
+            if (!isValid) {
+                return false;        
+            }    
+        }        
+
+        // Otherwise valid.
+        return true;
     }
 
 
@@ -393,10 +413,9 @@ export default class Prefix {
 
         try {
             // Check input.
-            for (const char of hex) {
-                // If char is not valid hex then throw an error.
-                if (!this.isHex(char)) throw new Error("Invalid Hex Character!")
-            }
+            // If char is not valid hex then throw an error.
+            if (!this.isHex(hex)) throw new Error("Invalid Hex character entered!")
+
 
             let binaries = "";
 
@@ -438,6 +457,12 @@ export default class Prefix {
          */
 
         try {
+            // Check input.
+            // Valid binaries are 1 and 0 only.            
+            if (!this.isBinary(bin)) throw new Error("Invalid binary character entered!");    
+            
+            
+
             let hexadecimals: string = "";   // To be returned.
             const toHex: Array<string> = []; // Binaries to be converted to hexadecimals.
 
@@ -501,7 +526,7 @@ export default class Prefix {
             for (const binaries of toHex) {
                 // Convert binaries to number(decimal).
                 const dec = parseInt(binaries, 2);
-
+                
                 /*
                 Check because parseInt method removes leading zeros and passing
                 a series of 0s to parseInt method leaves you a single 0, we have
@@ -530,7 +555,8 @@ export default class Prefix {
                     
                     // If there's no leading zeros
                     if (binaries.length < nonZeroNibbleBits) {
-                        hexadecimals += dec.toString(16);                    
+                        hexadecimals += dec.toString(16);                        
+                        break;
                     }
                                     
                     /*
@@ -560,8 +586,7 @@ export default class Prefix {
         } catch (error:any) {
             console.log(error);
             return new Error(error.message);
-        }
-        
+        }        
     }
 
     
@@ -599,8 +624,10 @@ export default class Prefix {
                     const toBinResult = this.hexToBin(elem);
 
                     if (typeof toBinResult === "string") {
+                        // toBinResult now a string.
                         return toBinResult;    
                     } else {
+                        // toBinResult now an object of type Error.
                         throw new Error(toBinResult.message);
                     }                    
                 })
@@ -632,10 +659,7 @@ export default class Prefix {
 
         try {
             // Check the input first.            
-            for (const bit of bin) {
-                const isBinaries = ["1", "0"].includes(bit);
-                if (!isBinaries) throw new Error("Invalid character. Input must be 1 and 0 only!");
-            }
+            if (!this.isBinary(bin)) throw new Error("Invalid binary character entered!");
             if (bin.length !== 128) throw new Error("Input must be a 128-bit binaries!");            
 
             // Convert binaries to hexadecimals.
@@ -654,9 +678,11 @@ export default class Prefix {
                 // If result is a string, then Typescript knows we want to work with string.
                 // result variable is now of type string.
                 hexs = result;
+
                 // Then turn them in a ipv6 address format which is in a colon notation.
                 for (let index = 0; index < hexs.length; index++) {
                     const element = hexs[index];
+
                     // Add a colon every four hex but not at the end of the addresss.
                     if (nibbleCount === 4 && index !== hexs.length - 1) {
                         ipv6Address += ":"
@@ -688,17 +714,157 @@ export default class Prefix {
     }
 
 
-    static getPrefix (ipv6Address: string, prefixLength: number, subnetBits: number, subnetToFind: number) {
+    static decToBin (num: number, bits: number=0): string {
+        /**
+         * This method converts number(decimal) to binaries.
+         * The second arguments is used to include leading zeros.
+         */
+
+        let binaries: string;
+
+        // If bits is ignored then convert num as it is.
+        if (bits === 0) {
+            // Convert number to binaries.
+            binaries = num.toString(2);
+            return binaries;
+        }
+
+        /*
+         Otherwise second arguments is assumed used(bits > 0)
+         add leading zeros.
+        */
+        // Convert to binaries.    
+        binaries = num.toString(2);
+        // Get leading zeros.
+        const zerosToPrepend = bits - binaries.length;        
+        // Add leading zeros.
+        binaries = "0".repeat(zerosToPrepend) + binaries;
+
+        return binaries;
+    }
+
+    static bitsToBin (bits: number, addressPortion: string): string | Error{
+        /**
+         * This method will convert number of bits to binaries.
+         * because dec to bin will not work outside of safe integers
+         * we have to improvise another way of solving it using
+         * this method.
+         */
+
+        try {
+            /*
+             This method will convert only to prefix, first and last addresses
+             of interfaceID portion.
+             prefix: interfaceID is all 0s
+             first: interfaceID is all 0s except 1 for the last element.
+             last: interfaceID is all 1s.
+            */
+            
+            const convertTo = ["prefix", "first", "last"];
+            if (!convertTo.includes(addressPortion)) throw new Error("Invalid address portion!");
+
+            let interfaceIDPortion: string; // To be returned.
+
+            if (addressPortion.toLowerCase() === "prefix") {
+                interfaceIDPortion = "0".repeat(bits);
+            }
+            else if (addressPortion.toLowerCase() === "first") {
+                interfaceIDPortion = "0".repeat(bits - 1) + "1";
+            }
+            else {
+                interfaceIDPortion = "1".repeat(bits);
+            }
+
+            return interfaceIDPortion;
+
+        } catch (error: any) {
+            console.log(error);
+            return new Error(error.message);
+        }
+    }
+
+
+    static getPrefix (ipv6Address: string, prefixLength: number, subnetBits: number, subnetToFind: number=0): Prefix | Error {
         /**
          * This method will list prefix(subnet) based on the value of prefixToFind.
          * This method assumes that the address input is unabbreviated.
          */
 
-        // const ipv6Bin: string = this.ipv6ToBin(ipv6Address).join(); 
-        const interfaceIDBits = 128 - (prefixLength + subnetBits);
-        const networkPortionBits = 128 - (subnetBits + interfaceIDBits);
-        const newPrefixLength = prefixLength + subnetBits;
-        
+        try {
+            // Check input.
+            if (this.ipv6Format(ipv6Address) === false) throw new Error("Invalid IPv6 Address!");
+            if (prefixLength <= 0 || prefixLength >= 128) throw new Error("Invalid Prefix Length!");
+            if (subnetBits >= 126) throw new Error("Invalid Subnet Bits!");
+            if (subnetToFind < 0 || subnetToFind > 2 ** subnetBits) throw new Error(`Subnet ${subnetToFind} does not exists!`);
+            
+            /*
+             Make sure that the input address is unabbreviated.
+             Then convert it to contiguous binaries.
+             Since expand() and ipv6ToBin methods result in
+             two different types. Let's forced the result into 
+             particualr type and do narrow types. 
+            */
+            const result = this.ipv6ToBin(String(this.expand(ipv6Address)));
+            let ipv6Bin: string = "";
+            if (result instanceof Array) {
+                ipv6Bin = result.join("");
+            }             
+            const newPrefixLength: number = prefixLength + subnetBits;
+            const interfaceIDBits: number = 128 - newPrefixLength;
+            const networkPortionBits: number = prefixLength;
+            const networkPortionBin: string = ipv6Bin.slice(0, networkPortionBits);
+            const subnetNumber: number = subnetToFind;            
+
+            // console.log(networkPortionBin)
+            // Declare Prefix object initialize prefix properties.
+            const prefix = new Prefix();            
+
+            // Set subnet number.
+            prefix.subnetNumber = subnetNumber;
+            
+            // Set network portion in binaries.
+            prefix.networkPortion = networkPortionBin;            
+            
+            // Set the subnet portion.
+            // Convert subnet number to binaries.
+            const subnetBin = subnetNumber.toString(2);
+            // Prepend leading zeros because the toString method doesn't include leading zeros.
+            const zerosToPrepend = subnetBits - subnetBin.length;
+            // If not subnetted, then the subnet portion is 0.
+            if (subnetBits === 0) {
+                prefix.subnetPortion = "";
+            } else {
+                // Otherwise subnetted.
+                prefix.subnetPortion = "0".repeat(zerosToPrepend) + subnetBin;
+            }
+
+            // Initialize the interfaceID portion object.
+            // Set the bits property.
+            prefix.interfaceIDPortion.bits = interfaceIDBits;
+            // Note: bitsToBin method results to two types, let's just forced the result to be a string by using the String function.
+            // Set the interfaceID's prefix(Network Address in ipv4) portion.
+            prefix.interfaceIDPortion.prefix = String(this.bitsToBin(interfaceIDBits, "prefix")); // Binaries.
+            // Set the interfaceID's First Usable Address portion.
+            prefix.interfaceIDPortion.firstUsableAddress = String(this.bitsToBin(interfaceIDBits, "first")); // Binaries.
+            // Set the interfaceID's Last Usable Address portion.
+            prefix.interfaceIDPortion.lastUsableAddress = String(this.bitsToBin(interfaceIDBits, "last")); // Binaries.
+
+            // Set the prefix's prefixID(Network Address in ipv4), first and last usable addresses.
+            // Note: binToIPv6 method results to two types, let's just forced the result to be a string.
+            // Set the prefix.                        
+            prefix.prefix = String(this.binToIPv6(prefix.networkPortion + prefix.subnetPortion + prefix.interfaceIDPortion.prefix));
+            // Set the First Usable Address.
+            prefix.firstUsableAddress =  String(this.binToIPv6(prefix.networkPortion + prefix.subnetPortion + prefix.interfaceIDPortion.firstUsableAddress));
+            // Set the Last Usable Address.
+            prefix.lastUsableAddress =  String(this.binToIPv6(prefix.networkPortion + prefix.subnetPortion + prefix.interfaceIDPortion.lastUsableAddress));
+                 
+            // Finally return prefix object.
+            return prefix;            
+
+        } catch (error: any) {
+            console.log(error);
+            return new Error(error.message);
+        }        
     }
 }
 
