@@ -712,7 +712,7 @@ export default class Prefix {
             return new Error(error.message);
         }         
     }
-    
+
 
     static bitsToBin (bits: number, addressPortion: string): string | Error{
         /**
@@ -789,12 +789,15 @@ export default class Prefix {
             // console.log(networkPortionBin)
             // Declare Prefix object initialize prefix properties.
             const prefix = new Prefix();            
-
+            
             // Set subnet number.
-            prefix.subnetNumber = subnetNumber;
+            prefix.subnetNumber = subnetNumber;            
             
             // Set network portion in binaries.
-            prefix.networkPortion = networkPortionBin;            
+            prefix.networkPortion = networkPortionBin;
+
+            // Set the new prefix length.
+            prefix.newPrefixLength = newPrefixLength;
             
             // Set the subnet portion.
             // Convert subnet number to binaries.

@@ -1,0 +1,29 @@
+{
+  "name": "ipv6-subnetting",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "sass": "sass --watch ./src/sass:./src/dist/css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kmfiguerrez/IPv6-Subnetting.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kmfiguerrez/IPv6-Subnetting/issues"
+  },
+  "homepage": "https://github.com/kmfiguerrez/IPv6-Subnetting#readme",
+  "devDependencies": {
+    "sass": "^1.57.1",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  },
+  "dependencies": {
+    "bootstrap": "^5.2.3"
+  }
+}

@@ -4,18 +4,102 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./src/dist/css/style.css">
     <title>IPv6 Subnetting</title>
 </head>
 <body>
-    <form action="">
-        <label for="">IPv6 Address</label>
-        <input type="text">
-        <label for="">Prefix Length</label>
-        <input type="text">
-        <label for="">Subnet Bits</label>
-        <input type="text">
-        <button>submit</button>
-    </form>
-    <script src="./dist/main.js" type="module"></script>
+    <div class="container">
+
+        <!-- Nav section -->
+        <nav class="navbar navbar-expand-sm navbar-light bg-transparent mb-3 mb-md-5">
+            <div class="container px-0">
+                <a class="navbar-brand" href="#">IPV6 SUBNETTING</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav ms-auto">
+                        <a class="nav-link" data-bs-toggle="offcanvas" href="#offcanvas" aria-controls="offcanvas">Features</a>
+                        <a class="nav-link" href="#infoSection">info</a>                         
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Section -->
+        <main class="container min-vh-100 px-0">
+            <!-- Form Section -->
+            <form class="mb-5">
+                <div class="mb-3">
+                    <label for="ipv6Address" class="form-label">IPv6 Address</label>
+                    <input type="text" class="form-control" id="ipv6Address" placeholder="1111:2222:3333:4444:5555:6666:7777:8888">
+                    <div class="valid-feedback">
+                        Looks Good!
+                    </div> 
+                    <div class="invalid-feedback">
+                        Invalid IPv6 entry!
+                    </div> 
+                </div>
+                <div class="mb-3">
+                    <label for="prefixLength" class="form-label">Prefix Length</label>
+                    <input type="number" class="form-control" id="prefixLength" min="0">
+                    <div class="valid-feedback">
+                        Looks Good!
+                    </div> 
+                    <div class="invalid-feedback">
+                        Invalid Prefix Length entry!
+                    </div> 
+                </div>
+                <div class="mb-3">
+                    <label for="subnetBits" class="form-label">Subnet Bits</label>
+                    <input type="number" class="form-control" id="subnetBits" min="0" max="125">
+                    <div class="valid-feedback">
+                        Looks Good!
+                    </div> 
+                    <div class="invalid-feedback">
+                        Invalid Subnet Bits entry!
+                    </div>
+                </div>       
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+            <!-- Output Section-->
+            <div id="output-section" class="pb-5">
+                <!-- <h2 id="output-header" class="text-center visually-hidden">OUTPUT</h2> -->
+                <p id="caption">OUTPUT</p>
+                <div class="row mb-2 border-bottom mx-0">
+                    <div class="col-md-8 ps-0">
+                        <form>
+                            <label for="subnet-number" class="fw-bold">Subnet:</label>
+                            <input id="subnetNumber" type="number" class="border-0" min="0" value="0"/>
+                        </form>                        
+                    </div>
+                    <div class="col-md-4 ps-0 ps-md-3">
+                        <span class="fw-bold">Hosts:</span> <span id="host">0</span>
+                    </div>                    
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6 col-md-4 fw-bold">Prefix</div>
+                    <div class="col-4" id="prefix">0.0.0.0</div>
+                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6 col-md-4 fw-bold">First Usable Address</div>
+                    <div class="col-4" id="firstUsableAddress">0.0.0.0</div>
+                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6 col-md-4 fw-bold">Last Usable Address</div>
+                    <div class="col-4" id="lastUsableAddress">0.0.0.0</div>
+                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                </div>
+            </div>
+
+        </main>
+        
+    </div>    
+    
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" type="module"></script>
+    <script src="./src/dist/js/main.js" type="module"></script>
 </body>
 </html>
