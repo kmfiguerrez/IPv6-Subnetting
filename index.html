@@ -60,42 +60,112 @@
                         Invalid Subnet Bits entry!
                     </div>
                 </div>       
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button id="formButton" class="btn btn-primary">Submit</button>
             </form>
 
             <!-- Output Section-->
-            <div id="output-section" class="pb-5">
+            <div id="outputSection" class="pb-5">
                 <!-- <h2 id="output-header" class="text-center visually-hidden">OUTPUT</h2> -->
                 <p id="caption">OUTPUT</p>
                 <div class="row mb-2 border-bottom mx-0">
-                    <div class="col-md-8 ps-0">
+                    <div class="col ps-0">
                         <form>
-                            <label for="subnet-number" class="fw-bold">Subnet:</label>
+                            <label for="subnetNumber" class="fw-bold">Subnet:</label>
                             <input id="subnetNumber" type="number" class="border-0" min="0" value="0"/>
                         </form>                        
                     </div>
-                    <div class="col-md-4 ps-0 ps-md-3">
+                    <div class="col-12 ps-0">                        
                         <span class="fw-bold">Hosts:</span> <span id="host">0</span>
                     </div>                    
                 </div>
                 <div class="row mb-2">
-                    <div class="col-6 col-md-4 fw-bold">Prefix</div>
-                    <div class="col-4" id="prefix">0.0.0.0</div>
-                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                    <div class="col-10 col-sm-2 fw-bold">Prefix</div>
+                    <div class="col-12 col-sm-8 order-1 order-sm-0" id="prefix">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
+                    <div class="col-2 col-sm-2 order-0 order-sm-1">/0</div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-6 col-md-4 fw-bold">First Usable Address</div>
-                    <div class="col-4" id="firstUsableAddress">0.0.0.0</div>
-                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                    <div class="col-10 col-sm-2 fw-bold">First Usable Address</div>
+                    <div class="col-12 col-sm-8 order-1 order-sm-0" id="firstUsableAddress">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
+                    <div class="col-2 col-sm-2 order-0 order-sm-1">/0</div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-6 col-md-4 fw-bold">Last Usable Address</div>
-                    <div class="col-4" id="lastUsableAddress">0.0.0.0</div>
-                    <div class="col-2 col-md-4 text-center text-md-start">/0</div>
+                    <div class="col-10 col-sm-2 fw-bold">Last Usable Address</div>
+                    <div class="col-12 col-sm-8 order-1 order-sm-0" id="lastUsableAddress">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
+                    <div class="col-2 col-sm-2 order-0 order-sm-1">/0</div>
                 </div>
             </div>
-
         </main>
+
+        <!-- Offcanvas Section-->
+        <div class="offcanvas offcanvas-start text-white bg-dark" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel" style="width: 250px;">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasLabel">Features</h5>
+                <button type="button" class="btn-close btn-close-white text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <hr>
+            <div class="offcanvas-body">
+                <ul class="list-unstyled ps-0">
+                    <!-- Conversions -->
+                    <li class="mb-1">
+                        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#conversion-collapse" aria-expanded="false">
+                            Conversions
+                        </button>
+                        <div class="collapse" id="conversion-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Conversion"
+                                        data-conversion="ipv4-bin" data-input="IPv4 Address" data-output="Binary">
+                                        IPv4<i class="bi bi-arrow-left-right mx-2"></i>Bin
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Conversion"
+                                        data-conversion="cidr-sm" data-input="CIDR" data-output="Subnet Mask">
+                                        CIDR<i class="bi bi-arrow-left-right mx-2"></i>SM
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Conversion"
+                                        data-conversion="dec-bin" data-input="Decimal" data-output="Binary">
+                                        Dec<i class="bi bi-arrow-left-right mx-2"></i>Bin
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <!-- Validation-->
+                    <li class="mb-1">
+                        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#checker-collapse" aria-expanded="false">
+                            Validation
+                        </button>
+                        <div class="collapse" id="checker-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validation" data-validation-operation="ipv4" 
+                                        data-input="IPv4 Address">
+                                        IPv4 Address
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validation" data-validation-operation="sm"
+                                        data-input="Subnet Mask">
+                                        Subnet Mask
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validation" data-validation-operation="ipv4-type"
+                                        data-input="IPv4 Address" data-output="Type">
+                                        IPv4 Address Type
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
         
     </div>    
     
