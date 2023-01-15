@@ -8,7 +8,7 @@ const outputSection = document.getElementById("outputSection") as HTMLDivElement
 const subnetNumberInput = document.getElementById("subnetNumber") as HTMLInputElement;
 
 
-const checkInputs = function (ipv6Address: string, prefixLength: number, subnetBits: number, subnetToFind: number): boolean | Error {
+const checkInputs = function (ipv6Address: string, prefixLength: number, subnetBits: number, subnetToFind: string): boolean | Error {
     /**
      * This function will check user's inputs: ipv6 address, prefix length,
      * subnet bits and the particular subnet user's looking for.
@@ -40,7 +40,7 @@ const checkInputs = function (ipv6Address: string, prefixLength: number, subnetB
             errorCount++;
         }
         // Check the subnet bits.
-        if (subnetBitsInput.value === '' || prefixLength + subnetBits >= 126) {
+        if (subnetBitsInput.value === '' || subnetBits < 0 || prefixLength + subnetBits >= 126) {
             // Remove first the .is-valid if it's exists.
             subnetBitsInput.classList.remove("is-valid");
             // Then add .is-invalid.
@@ -50,7 +50,7 @@ const checkInputs = function (ipv6Address: string, prefixLength: number, subnetB
             errorCount++;
         }   
         // Check the subnet that is looking for.
-        if (subnetToFind < 0 || subnetToFind > numOfNetworks ) {
+        if (BigInt(subnetToFind) < 0 || BigInt(subnetToFind) > numOfNetworks ) {
             // Set error message.
             errorMessage = `Subnet ${subnetToFind} does not exists!`;
             errorCount++;
@@ -76,10 +76,12 @@ const checkInputs = function (ipv6Address: string, prefixLength: number, subnetB
 }
 
 
-export const getPrefix = function (subnetToFind: number): void {
+export const getPrefix = function (subnetToFind: string="0"): void {
     /**
      * This function will respond to the click events from the form's
      * button element.
+     * This functions takes an optional argument of type string, because
+     * by default it will calculate the subnet zero.
      * It will get the user's input: ipv6 address, prefix length
      * and subnet bits.
      * It will call the render method to display the results in the

@@ -6,7 +6,7 @@ interface InterfaceID {
 }
 
 export type prefix = {
-    subnetNumber: number;
+    subnetNumber: BigInt;
     networkPortion: string;
     subnetPortion: string;    
     newPrefixLength: number;
@@ -17,7 +17,7 @@ export type prefix = {
 }
 
 export default class Prefix {
-    subnetNumber: number = 0;
+    subnetNumber: BigInt = 0n;
     networkPortion: string = "";
     subnetPortion: string = "";    
     newPrefixLength: number = 0;
@@ -672,17 +672,19 @@ export default class Prefix {
     }
 
 
-    static getPrefix (ipv6Address: string, prefixLength: number, subnetBits: number, subnetToFind: number=0): Prefix | Error {
+    static getPrefix (ipv6Address: string, prefixLength: number, subnetBits: number, subnetToFind: string="0"): Prefix | Error {
         /**
          * This method will list prefix(subnet) based on the value of prefixToFind.
          * This method assumes that the address input is unabbreviated.
+         * The subnetToFind parameter is of type string to store numbers outside
+         * JS max integers, then convert it to BigInt type.
          */
 
         try {
             // Check input.
             if (this.ipv6Format(ipv6Address) === false) throw new Error("Invalid IPv6 Address!");
             if (prefixLength <= 0 || prefixLength >= 128) throw new Error("Invalid Prefix Length!");            
-            if (subnetToFind < 0 || subnetToFind > 2 ** subnetBits) throw new Error(`Subnet ${subnetToFind} does not exists!`);
+            if (BigInt(subnetToFind) < 0 || BigInt(subnetToFind) > (BigInt(2 ** subnetBits) - 1n)) throw new Error(`Subnet ${subnetToFind} does not exists!`);
             
             /*
              Make sure that the input address is unabbreviated.
@@ -700,7 +702,7 @@ export default class Prefix {
             const interfaceIDBits: number = 128 - newPrefixLength;
             const networkPortionBits: number = prefixLength;
             const networkPortionBin: string = ipv6Bin.slice(0, networkPortionBits);
-            const subnetNumber: number = subnetToFind;            
+            const subnetNumber: BigInt = BigInt(subnetToFind);            
 
             // console.log(networkPortionBin)
             // Declare Prefix object initialize prefix properties.

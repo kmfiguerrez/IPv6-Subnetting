@@ -48,12 +48,12 @@ formButton.addEventListener("click", () => {
      The getPrefix() will calculate the prefix and display
      the results.
     */
-    getPrefix(0);
+    getPrefix();
 })
 
 subnetNumberInput.addEventListener("change", () => {
     // Get the subnet number.
-    const subnetToFind = parseInt(subnetNumberInput.value);        
+    const subnetToFind = subnetNumberInput.value;        
 
     // Get the prefix based on subnet number.
     getPrefix(subnetToFind);
@@ -61,5 +61,3 @@ subnetNumberInput.addEventListener("change", () => {
 
 
 
-const res = Prefix.binToHex("1111111111111111111111111111111111111111111111111111111111111111");
-console.log(res)
