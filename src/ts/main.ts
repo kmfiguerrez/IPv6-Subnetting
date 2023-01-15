@@ -1,4 +1,5 @@
 import { getPrefix } from "./controller.js";
+import Prefix from "./ipv6.js";
 
 
 const formButton = document.getElementById("formButton") as HTMLButtonElement;
@@ -60,3 +61,5 @@ subnetNumberInput.addEventListener("change", () => {
 
 
 
+const res = Prefix.binToHex("1111111111111111111111111111111111111111111111111111111111111111");
+console.log(res)

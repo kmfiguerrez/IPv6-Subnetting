@@ -470,18 +470,34 @@ export default class Prefix {
         try {
             // Check input.
             // Valid binaries are 1 and 0 only.            
-            if (!this.isBinary(bin)) throw new Error("Invalid binary character entered!");    
+            if (!this.isBinary(bin)) throw new Error("Invalid character entered!");    
             
-            let hexadecimals: string = "";   // To be returned.            
+            let hexadecimals: string = "";  // To be returned.            
 
             /*
             Because number greater than (2 ** 53 - 1) lose precision and it's outside
             Javascript max safe integers, we will use BigInt data type instead of number.            
             */
 
-            
+            // Convert binaries to hex.
+            const result = (BigInt(`0b${bin}`)).toString(16);
 
-            // Finally return hexadecimals.
+            /*
+             Check for leading zeros.
+             If bin.length > nibbleCount then leading zero(s) are omitted
+             and we're going to include it.
+             nibbleCount is contigious binaries that is a multiple of 4.
+            */
+            const nibbleCount = result.length * 4;
+            if (bin.length > nibbleCount) {
+                // result.length equals hex digit(s).
+                const zerosToPrepend = Math.ceil(bin.length / 4) - result.length;
+                hexadecimals = "0".repeat(zerosToPrepend) + result;
+                return hexadecimals;
+            }
+                        
+            // Otherwise no leading zeros.
+            hexadecimals = result;
             return hexadecimals;
 
         } catch (error:any) {
@@ -740,5 +756,29 @@ export default class Prefix {
             return new Error(error.message);
         }        
     }
+
+
+    static macAddressFormat (macAddress: string): boolean {
+        /**
+         * This method uses regular expression to check user's input against 
+         * mac address three valid format: colon notation, hyphen notation 
+         * and contiguous hexadecimals.
+         */
+
+        // This will match three valid mac address format.        
+        const macaPattern = /^(([a-f]{2}(-|:)?){6})$/i;
+                
+        // Test user's input.
+        const result = macaPattern.test(macAddress);
+        if (!result) {
+            // If result is false(user's input is invalid), return false.
+            return false;
+        }
+
+        // Otherwise valid.
+        return true;
+    }
+
+
 }
 
