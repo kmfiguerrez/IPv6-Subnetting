@@ -223,7 +223,7 @@ export default class Prefix {
                 ipv6Array = ipv6Array.map(elem => {
                     let hexZeroCount = 0; // Hex zero counter.
                     let newSegment = '';
-                    0
+                    
                     for (const char of elem) {          
                         // Get the first non-zero hex digit it detects and the rest of the digts in a segment.   
                         if (char !== "0") {                    
@@ -353,7 +353,8 @@ export default class Prefix {
                 // console.log(ipv6Array)
 
                 // Finally return ipv6 as string.
-                return ipv6 = ipv6Array.join(":");
+                ipv6 = ipv6Array.join(":");
+                return ipv6;
 
             } else {
                 /*
@@ -847,7 +848,7 @@ export default class Prefix {
                     macArray[1] = seventhBitConversion[key]
                 }                
             }
-            console.log(macArray)
+            
             // Add a colon every four hex digits.
             for (const hex of macArray) {
                 if (fourCount === 4) {                    
@@ -869,7 +870,7 @@ export default class Prefix {
     }
 
 
-    static linkLocalA (macAddress: string): string | Error {
+    static linkLocal (macAddress: string): string | Error {
         /**
          * This method will generate the ipv6 unicast Link-Local address
          * that we see on host(s). It will use the cisco router's way of
@@ -884,6 +885,7 @@ export default class Prefix {
             // Check input(s).
             if (this.macaFormat(macAddress) === false) throw new Error("Invalid Mac Address!");
 
+            // Link-Local prefix.
             const linkLocalPrefix = "FE80::";
 
             // Get the interface ID using eui-64 logic.
@@ -895,8 +897,7 @@ export default class Prefix {
             */
             let linkLocalAddress = linkLocalPrefix + interfaceID;
 
-            // We usually see the link-local unicast abbreviated on host(s).
-            console.log(linkLocalAddress)
+            // We usually see the link-local unicast abbreviated on host(s), so abbreviate it.            
             // Expand it first. 
             const expand = this.expand(linkLocalAddress.toLocaleLowerCase()) as string;
             // Then abbreviate it.
@@ -913,7 +914,65 @@ export default class Prefix {
     }
 
 
-    
+    static solicitedNode (ipv6Address: string) {
+        /**
+         * This method will generate a Solicited-Node Multicast Address.
+         * All solicited-node starts with the predefined /104 prefix (26 hex digits),
+         * which is FF02::1:FF defined by RFC. Then the last 24 bits (6 hex digits),
+         * copy the last 6 hex digits of the unicast address into the solicited-node
+         * address.
+         * This method assumes that the input address is in lowercase.
+         */
+
+        try {
+            // Check input.
+            if (this.ipv6Format(ipv6Address) === false) throw new Error("Invalid IPv6 Address");
+
+            let solicitedNodeAddress = ''; // To be returned.
+            let fourCount = 0; // Counter.
+
+            // Solicited Node prefix: FF02::1:FF /104.
+            const solicitedNodePrefix = "FF0200000000000000000001FF";
+
+            /*
+             Get the last 6 hex digits of an ipv6 unicast address.
+             Make sure that the input address in not abbreviated.             
+            */
+            const ipv6 = this.expand(ipv6Address) as string;
+            // Convert it to array.
+            let ipv6Array: Array<string> = ipv6.split(":");
+            // Then convert it to contiguous hex digits, then slice the last 6 hex digits.            
+            const sixHexDigits = ipv6Array.join("").slice(-6);
+
+            // Combine the solicited-node prefix and the last 6 hex digits.
+            const result = solicitedNodePrefix + sixHexDigits;
+            console.log(result)
+            // Add a colon every four hex digits.
+            for (const hex of result) {
+                if (fourCount === 4) {                    
+                    solicitedNodeAddress += ":";
+                    // reset the count.
+                    fourCount = 0;
+                }
+                solicitedNodeAddress += hex
+                fourCount++;
+            }
+            
+            // We usually see the solicited-node unicast abbreviated on host(s), so abbreviate it.
+            // Expand it first.
+            const expand = this.expand(solicitedNodeAddress.toLowerCase()) as string;
+            // Then abbreviate it.
+            const abbreviate = this.abbreviate(expand) as string;
+            solicitedNodeAddress = abbreviate;
+
+            // Finally return the solicited-node multicast address.
+            return solicitedNodeAddress;
+
+        } catch (error: any) {
+            console.log(error);
+            return new Error(error.message);
+        }        
+    }
 
 
 }
