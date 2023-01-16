@@ -40,7 +40,8 @@ export default class Prefix {
 
     static ipv6Format (ipv6Address: string): boolean {
         /**
-         * This method will check user input of ipv6 address.
+         * This method will check user input of ipv6 address and 
+         * it assumes it is in lowercase.
          * This method has an ordered sequence of checkings.
          */
 
@@ -139,7 +140,8 @@ export default class Prefix {
     static expand (ipv6Address: string): string | Error {
         /**
          * This method will expand ipv6 address if it's abbreviated 
-         * by adding leading zeros and turning :: into segments of all zeros.         
+         * by adding leading zeros and turning :: into segments of all zeros.
+         * This method assumes that the input is in lowercase.       
          */
         
         try {
@@ -194,7 +196,8 @@ export default class Prefix {
     static abbreviate (ipv6Address: string): string | Error {
         /**
          * This method will abbreviate ipv6 address by removing leading zeros and          
-         * substitute double colons(::) into two or more consecutive segments of all zeros.         
+         * substitute double colons(::) into two or more consecutive segments of all zeros.
+         * This method assumes that the input is in lowercase.
         */
         
         try {
@@ -760,7 +763,7 @@ export default class Prefix {
     }
 
 
-    static macAddressFormat (macAddress: string): boolean {
+    static macaFormat (macAddress: string): boolean {
         /**
          * This method uses regular expression to check user's input against 
          * mac address three valid format: colon notation, hyphen notation 
@@ -768,7 +771,7 @@ export default class Prefix {
          */
 
         // This will match three valid mac address format.        
-        const macaPattern = /^(([a-f]{2}(-|:)?){6})$/i;
+        const macaPattern = /^(([a-f0-9]{2}(-|:)?){6})$/i;
                 
         // Test user's input.
         const result = macaPattern.test(macAddress);
@@ -780,6 +783,137 @@ export default class Prefix {
         // Otherwise valid.
         return true;
     }
+
+
+    static eui_64 (macAddress: string, ipv6Address: string=""): string | Error {
+        /**         
+         * This method will generate the interfaceID part of an ipv6 address
+         * using the modified extended unique modifier 64 or just eui-64.
+         * This method assumes that the input is in lowercase.
+         */
+
+        try {
+            // if (this.ipv6Format(ipv6Address) === false) throw new Error("Invalid ipv6 address!");
+            if (this.macaFormat(macAddress) === false) throw new Error("Invalid mac address!");
+
+            /*
+             Algorithm for eui-64 to generate the interface ID.
+              1. Split the mac address in two halves.
+              2. Insert FFFE in the middle.
+              3. Convert the resulting interface ID to binaries, 
+                 invert the seventh bit of the interface ID.
+              4. Convert it back to hexadecimals and add a colon every
+                 four hex digits.
+            */
+
+            // Let's create an index signature.                 
+            interface StringArray {
+                [index: string]: string
+            }
+            const seventhBitConversion: StringArray = {
+                0: "2", 1: "3", 2: "0", 3: "1", 4: "6", 5: "7", 6: "4", 7: "5",
+                8: "a", 9: "b", a: "8", b: "9", c: "e", d: "f", e: "c", f: "d",
+            }
+            let interfaceID = '';
+            let fourCount = 0;
+            // Convert the mac address into an array of hexs.
+            let macArray: Array<string>;
+
+            if (macAddress.includes(":")) {
+                macArray = macAddress.split(":");
+            } else if (macAddress.includes("-")) {
+                macArray = macAddress.split("-");
+            } else {
+                macArray = macAddress.split("");
+            }
+
+            // Split the mac adddress in two havles and insert FFFE in the middle.
+            const toInsertAt = macArray.length / 2;
+            macArray.splice(toInsertAt, 0, "FFFE");
+
+            /*
+             In here instead of converting the hexs into binaries, we're gonna use
+             the decimal shortcuts of inverting the seventh bit. Because inverting 
+             the seventh bit means changing the value of the second hex of the 
+             interface ID. So make sure that the macArray is an array of single hex
+             digits.
+            */
+            macArray = macArray.join("").split("");
+
+            // Change the value of the second hex(invert the seventh bit) based on the seventhBitConversion above.
+            const secondHex = macArray[1];
+            for (const key in seventhBitConversion) {
+                if (secondHex === key) {
+                    macArray[1] = seventhBitConversion[key]
+                }                
+            }
+            console.log(macArray)
+            // Add a colon every four hex digits.
+            for (const hex of macArray) {
+                if (fourCount === 4) {                    
+                    interfaceID += ":";
+                    // reset the count.
+                    fourCount = 0;
+                }
+                interfaceID += hex
+                fourCount++;
+            }
+            
+            // Finally return the interface ID.
+            return interfaceID.toLocaleLowerCase();
+
+        } catch (error: any) {
+            console.log(error);
+            return new Error(error.message);
+        }
+    }
+
+
+    static linkLocalA (macAddress: string): string | Error {
+        /**
+         * This method will generate the ipv6 unicast Link-Local address
+         * that we see on host(s). It will use the cisco router's way of
+         * making the interface ID part of the address and that is using
+         * the eui-64 method. Note that the Link-Local unicast starts with
+         * the prefix FE80/10 with the remaining 54 bits should be all 0s
+         * per RFC: FE80::/64.
+         * This method assumes that the input is in lowercase.
+         */
+
+        try {
+            // Check input(s).
+            if (this.macaFormat(macAddress) === false) throw new Error("Invalid Mac Address!");
+
+            const linkLocalPrefix = "FE80::";
+
+            // Get the interface ID using eui-64 logic.
+            const interfaceID = this.eui_64(macAddress) as string;
+
+            /*
+             Combine the Link-Local prefix and the interface ID to generate the
+             unicast link-local address.
+            */
+            let linkLocalAddress = linkLocalPrefix + interfaceID;
+
+            // We usually see the link-local unicast abbreviated on host(s).
+            console.log(linkLocalAddress)
+            // Expand it first. 
+            const expand = this.expand(linkLocalAddress.toLocaleLowerCase()) as string;
+            // Then abbreviate it.
+            const abbreviate = this.abbreviate(expand) as string;
+            linkLocalAddress = abbreviate;
+            
+            // Finally return the unicast link-local address.
+            return linkLocalAddress;
+
+        } catch (error: any) {
+            console.log(error);
+            return new Error(error.message);
+        }
+    }
+
+
+    
 
 
 }
