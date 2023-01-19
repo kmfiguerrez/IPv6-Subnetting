@@ -5,9 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./src/dist/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;700&display=swap" rel="stylesheet">
     <title>IPv6 Subnetting</title>
 </head>
-<body>
+<body style="font-family: 'Montserrat', sans-serif;">
     <div class="container">
 
         <!-- Nav section -->
@@ -96,6 +99,59 @@
             </div>
         </main>
 
+        <!-- Info section -->
+        <section id="infoSection" class="container-fluid min-vh-100 text-white bg-dark pt-3">
+            <h2 class="text-center mb-5">IPv6 Subnetting Program</h2>
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-12">
+                        <h3>What this app is about?</h3>
+                        <p>
+                            This app can be used to check your work whenever your're learning or practicing IPv6 subnetting. 
+                            This app is free for anyone to use.
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <h3>How to use this app?</h3>
+                        <ol>
+                            <li>Enter an IPv6 Address.</li>
+                            <li>Enter a Prefix Length.</li>
+                            <li>Enter the number of bits (or borrowed bits) for subnet portion.</li>
+                            <li>Click the submit button.</li>
+                        </ol>
+                    </div>
+                    <div class="col-12">
+                        <h3>About the output?</h3>
+                        <ul>
+                            <li>By default the app will display the first subnet (Subnet zero).</li>
+                            <li>You can find other subnets if available by clicking on the subnet label or the subnet number input next to it.</li>
+                            <li>The Hosts label represents the number of host per subnet.</li>
+                        </ul>
+                    </div>
+                    <div class="col-12">
+                        <h3>Features</h3>
+                        <p>Conversions</p>
+                        <ul>
+                            <li>Binary to Hexadecimals</li>
+                            <li>Decimal to Hexadecimals</li>
+                            <li>Decimal to Binary</li>
+                        </ul>
+                        <p>Validations</p>
+                        <ul>
+                            <li>IPv6 Address Format</li>                            
+                            <li>IPv6 Address Type</li>                            
+                        </ul>
+                        <p>Generates</p>
+                        <ul>
+                            <li>EUI-64</li>
+                            <li>Link-Local Address</li>
+                            <li>Solicited-Node Address</li>                            
+                        </ul>
+                    </div>
+                </div>                                
+            </div>            
+        </section>
+
         <!-- Offcanvas Section-->
         <div class="offcanvas offcanvas-start text-white bg-dark" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel" style="width: 250px;">
             <div class="offcanvas-header">
@@ -114,21 +170,21 @@
                         <div class="collapse" id="conversion-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                 <li>
-                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Conversion"
-                                        data-conversion="ipv4-bin" data-input="IPv4 Address" data-output="Binary">
-                                        IPv4<i class="bi bi-arrow-left-right mx-2"></i>Bin
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Conversions"
+                                        data-modal-operation="bin-hex" data-input="Binary" data-output="Hexadecimal">
+                                        Bin<i class="bi bi-arrow-left-right mx-2"></i>Hex
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Conversion"
-                                        data-conversion="cidr-sm" data-input="CIDR" data-output="Subnet Mask">
-                                        CIDR<i class="bi bi-arrow-left-right mx-2"></i>SM
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Conversion"
-                                        data-conversion="dec-bin" data-input="Decimal" data-output="Binary">
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Conversions"
+                                        data-modal-operation="dec-bin" data-input="Decimal" data-output="Binary">
                                         Dec<i class="bi bi-arrow-left-right mx-2"></i>Bin
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Conversions"
+                                        data-modal-operation="hex-dec" data-input="Hexadecimal" data-output="Decimal">
+                                        Hex<i class="bi bi-arrow-left-right mx-2"></i>Dec
                                     </a>
                                 </li>
                             </ul>
@@ -138,32 +194,130 @@
                     <li class="mb-1">
                         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
                             data-bs-target="#checker-collapse" aria-expanded="false">
-                            Validation
+                            Validations
                         </button>
                         <div class="collapse" id="checker-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                 <li>
-                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validation" data-validation-operation="ipv4" 
-                                        data-input="IPv4 Address">
-                                        IPv4 Address
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validations" data-modal-operation="ipv6-format" 
+                                        data-input="IPv6 Address">
+                                        IPv6 Address Format
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validation" data-validation-operation="sm"
-                                        data-input="Subnet Mask">
-                                        Subnet Mask
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validations" data-modal-operation="mac-format" 
+                                        data-input="Mac Address">
+                                        Mac Address Format
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validation" data-validation-operation="ipv4-type"
-                                        data-input="IPv4 Address" data-output="Type">
-                                        IPv4 Address Type
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validations" data-modal-operation="ipv6-type"
+                                        data-input="IPv6 Address">
+                                        IPv6 Address Type
                                     </a>
                                 </li>
                             </ul>
                         </div>
                     </li>
+                    <!-- Generates-->
+                    <li class="mb-1">
+                        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#generates-collapse" aria-expanded="false">
+                            Generates
+                        </button>
+                        <div class="collapse" id="generates-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generates" data-modal-operation="interfaceID-eui-64" 
+                                        data-input="Mac Address" data-output="Interface ID">
+                                        Interface ID eui-64
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generates" data-modal-operation="ipv6-eui-64" 
+                                        data-input="Mac Address" data-output="IPv6 Unicast Address">
+                                        IPv6 Address eui-64
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generates" data-modal-operation="solicited-node"
+                                        data-input="IPv6 Unicast Address" data-output="Solicited-Node Multicast Address">
+                                        Solicited-Node Address
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generates" data-modal-operation="link-local"
+                                        data-input="Mac Address" data-output="Link-Local Unicast Address">
+                                        Link-Local Address eui-64
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <!-- Utils -->
+                    <li class="mb-1">
+                        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#utility-collapse" aria-expanded="false">
+                            Utilities
+                        </button>
+                        <div class="collapse" id="utility-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Utilities" data-modal-operation="abbreviate" 
+                                        data-input="IPv6 Address">
+                                        Abbreviate
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Utilities" data-modal-operation="expand"
+                                        data-input="IPv6 Address">
+                                        Expand
+                                    </a>
+                                </li>                                
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
+            </div>
+        </div>
+
+        <!-- Modals Section -->
+        <div class="modal fade" id="offcanvasModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" data-modal-alert="true">
+                        <form id="modal-form">
+                            <div class="mb-3">
+                                <label id="modal-input-label" for="modal-input" class="col-form-label">Input:</label>
+                                <input type="text" id="modal-input" class="form-control" placeholder="Input">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div> 
+                                <div class="invalid-feedback">
+                                    Invalid entry!
+                                </div> 
+                            </div>                            
+                            <button id="modal-switch-button" class="btn btn-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                </svg>
+                            </button>
+                            <div class="mb-3">
+                                <label  id="modal-output-label" for="modal-output" class="col-form-label">Output:</label>
+                                <output id="modal-output" class="d-block border border-1 py-2 px-3 rounded-2 text-muted text-break user-select-all">Output</output>
+                            </div>                            
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses" id="modalSourceLink" class="text-decoration-none d-inline-block me-auto link-info" target="_blank">source</a>                       
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" form="modal-form" id="modal-submit-button" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
             </div>
         </div>
         

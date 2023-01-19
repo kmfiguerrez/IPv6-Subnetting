@@ -211,6 +211,7 @@ export default class Prefix {
              we want to work with.
             */
             const result = this.expand(ipv6Address);
+            console.log(result)
             let ipv6Array: Array<string> = [];
             let ipv6 = ""; // To be returned.
 
@@ -218,7 +219,7 @@ export default class Prefix {
                 // If result is a string, then Typescript knows we want to work with string.
                 // result variable is now of type string.
                 ipv6Array = result.split(":");
-
+                
                 // First, omit leading zeros.
                 ipv6Array = ipv6Array.map(elem => {
                     let hexZeroCount = 0; // Hex zero counter.
@@ -241,10 +242,11 @@ export default class Prefix {
                             newSegment = "0";
                         }
                     }
-
+                    
                     return newSegment;
                 })
-
+                console.log(ipv6Array)
+                console.log(ipv6Array[7])
                 // Second, Substitute double colons(::) into multiple consecutive segments of all zeros.
                 // Check first if there's two instaces of segments of all zeros in a row.
                 let instances: Array<number> = [];
@@ -267,7 +269,7 @@ export default class Prefix {
                     }            
                     currentIndex++;
                 })
-
+                
                 // Then if there's two instances then we should pick the longest sequence.
                 if (instances.length === 2) {
                     const firstInstanceIndex = instances[0];
@@ -331,7 +333,7 @@ export default class Prefix {
                     // * is inserted to mark for double colon(::). 
                     ipv6Array.splice(instanceIndex, instanceLength, "*");
                 }
-                // console.log(ipv6Array)
+                
                 // Write the ipv6 address in a colon notation.
                 const doubleColonIndex = ipv6Array.indexOf("*");
                 // Note that * depicts ::
@@ -349,9 +351,8 @@ export default class Prefix {
                     // If * exists somewhere neither at the beginning nor end.
                     // Replace it with empty string.
                     ipv6Array.splice(doubleColonIndex, 1, "");
-                }
-                // console.log(ipv6Array)
-
+                }                
+                
                 // Finally return ipv6 as string.
                 ipv6 = ipv6Array.join(":");
                 return ipv6;
@@ -508,6 +509,109 @@ export default class Prefix {
             console.log(error);
             return new Error(error.message);
         }        
+    }
+
+
+    static decToBin (int: string): string | Error{
+        /**
+         * This method will convert integers to binary format.
+         * int param is in a string format because javascript 
+         * cannot read integers outside js max safe integers.
+         * This method will use BigInt type.
+         */
+
+        try {            
+            /*
+             Check input.
+             BigInt will only accept either integers or a string that
+             only contains integer characters. Otherwise it will throw
+             a syntax error.
+            */
+            const dec = BigInt(int);
+
+            // Convert to binary.
+            const binaries = dec.toString(2);
+
+            // Return binaries.
+            return binaries;
+            
+        } catch (error: any) {
+            console.log(error);
+            return new Error(error.message);
+        }
+    }
+
+
+    static binToDec (bin: string): BigInt | Error {
+        /**
+         * This method will convert binaries to decimal(BigInt).
+         */
+
+        try {
+            // Check input.
+            if (!this.isBinary(bin)) throw new Error("Input must be 1 and 0 only!");
+            
+            // Convert bin to bigint.
+            const dec = BigInt(`0b${bin}`);
+
+            // Return decimal.
+            return dec;
+            
+        } catch (error: any) {
+            console.log(error);
+            return new Error(error.message);
+        }
+    }
+
+
+    static hexToDec (hex: string) {
+        /**
+         * This method will convert hexadecimal(s) to decimal(BigInt).
+         */
+
+        try {
+            // Check input.
+            if (!this.isHex(hex)) throw new Error("Invalid hex character!");
+
+            // Convert hex to bigint.
+            const dec = BigInt(`0x${hex}`);
+
+            // Return decimal.
+            return dec;
+
+        } catch (error: any) {
+            console.log(error);
+            return new Error(error.message);
+        }
+    }
+
+
+    static decToHex (int: string) {
+        /**
+         * This method will convert integers to hexadecimals.
+         * int param is in a string format because javascript 
+         * cannot read integers outside js max safe integers.
+         */
+
+        try {
+            /*
+             Check input.
+             BigInt will only accept either integers or a string that
+             only contains integer characters. Otherwise it will throw
+             a syntax error.
+            */
+             const dec = BigInt(int);
+
+             // Convert to hexadecimals.
+             const hex = dec.toString(16);
+ 
+             // Return hexadecimals.
+             return hex;
+
+        } catch (error: any) {
+            console.log(error);
+            return new Error(error.message);
+        }
     }
 
     
@@ -786,7 +890,7 @@ export default class Prefix {
     }
 
 
-    static eui_64 (macAddress: string, ipv6Address: string=""): string | Error {
+    static eui_64 (macAddress: string): string | Error {
         /**         
          * This method will generate the interfaceID part of an ipv6 address
          * using the modified extended unique modifier 64 or just eui-64.
@@ -861,8 +965,42 @@ export default class Prefix {
             }
             
             // Finally return the interface ID.
-            return interfaceID.toLocaleLowerCase();
+            return interfaceID.toLowerCase();
 
+        } catch (error: any) {
+            console.log(error);
+            return new Error(error.message);
+        }
+    }
+
+
+    static ipv6_eui64 (ipv6Address: string, macAddress: string): string | Error {
+        /**
+         * This method will generate a unicast ipv6 address using the 
+         * eui-64 logic.
+         */
+
+        try {
+            // Check inputs.
+            if (!this.ipv6Format(ipv6Address)) throw new Error("Invalid IPv6 Address!");
+            if (!this.macaFormat(macAddress)) throw new Error("Invalid MAC Address!");
+
+            // Expand the ipv6 address first.
+            const result = this.expand(ipv6Address) as string
+            
+            // Get the first 64 bits of the ipv6 address.
+            const networkPortion = result.slice(0, 20);
+            
+            // Get the interface ID.
+            const interfaceID = this.eui_64(macAddress) as string;
+            
+            // Combine the network portion and the interface ID.
+            const unicastIPv6 = networkPortion + interfaceID;
+
+            // Finally return unicast ipv6 address abbreviated.
+            // console.log(unicastIPv6)
+            return this.abbreviate(unicastIPv6);
+            
         } catch (error: any) {
             console.log(error);
             return new Error(error.message);

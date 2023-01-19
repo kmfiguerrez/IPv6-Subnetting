@@ -6,7 +6,14 @@ const prefixLengthInput = document.getElementById("prefixLength") as HTMLInputEl
 const subnetBitsInput = document.getElementById("subnetBits") as HTMLInputElement;
 const outputSection = document.getElementById("outputSection") as HTMLDivElement;
 const subnetNumberInput = document.getElementById("subnetNumber") as HTMLInputElement;
-
+const modalHeading = document.querySelector('.modal-title') as HTMLHeadElement;
+const modalInputLabel = document.getElementById("modal-input-label") as HTMLLabelElement;
+const modalInput = document.getElementById("modal-input") as HTMLInputElement;
+const modalOutput = document.getElementById("modal-output") as HTMLInputElement;
+const modalOutputLabel = document.getElementById("modal-output-label") as HTMLLabelElement;
+const modalSwitchButton = document.getElementById("modal-switch-button") as HTMLButtonElement;
+const ipv6TypeSource = document.getElementById("modalSourceLink") as HTMLAnchorElement;
+const modalSubmitButton = document.getElementById("modal-submit-button") as HTMLButtonElement;
 
 const checkInputs = function (ipv6Address: string, prefixLength: number, subnetBits: number, subnetToFind: string): boolean | Error {
     /**
@@ -111,4 +118,299 @@ export const getPrefix = function (subnetToFind: string="0"): void {
 
     // Display the prefix.
     render(prefix);
+}
+
+export const updateModalContent = (
+    modalTitle: string, 
+    inputLabel: string, 
+    outputLabel: string,
+    removeSourceLink: boolean
+    ) => {
+    /**
+     * This function will update modal's content.
+     */    
+    
+    // First, reset modal's content.
+    modalInput.value = "";
+    modalOutput.textContent = "Output";
+    modalInput.classList.remove("is-invalid", "is-valid");
+
+    // Update the modal title.
+    modalHeading.textContent = modalTitle;
+    // Update the input label.
+    modalInputLabel.textContent = inputLabel;
+    // Update the output label.
+    modalOutputLabel.textContent = outputLabel;
+
+    if (modalTitle === "Validations" ||  modalTitle === "Utilities") {
+        // Update modal's ouput label.
+        modalOutputLabel.textContent = "Output";
+        // Hide the switch button.
+        modalSwitchButton.classList.remove("visible");
+        modalSwitchButton.classList.add("invisible");
+    } else if (modalTitle === "Generates") {
+        // Hide the switch button.
+        modalSwitchButton.classList.remove("visible");
+        modalSwitchButton.classList.add("invisible");
+    } else {
+        // Otherwise the modal is for conversions, show the switch button.
+        modalSwitchButton.classList.remove("invisible");
+        modalSwitchButton.classList.add("visible");
+    }
+
+    // Determine whether to show modal's source link or not.
+    if (removeSourceLink) {
+        // If the modal isn't about the IPv6 Address type, don't show it.
+        ipv6TypeSource.classList.remove("visible");
+        ipv6TypeSource.classList.add("invisible");
+    } else {
+        // Otherwise it is about IPv6 Address type, then display the source link.
+        ipv6TypeSource.classList.remove("invisible");
+        ipv6TypeSource.classList.add("visible");
+    }
+}
+
+export const modalOperation = (operation: string) => {
+    /**
+     * This function will perform modal's chosen operation.
+     * Brackets are added to every case to add lexical scope.
+     */
+
+    switch (operation) {
+        // Conversions operation.        
+        case "bin-hex": {
+            const bin = modalInput.value;
+            const result = Prefix.binToHex(bin);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = result;
+            break;
+        }
+            
+        case "hex-bin": {
+            const hex = modalInput.value;
+            const result = Prefix.hexToBin(hex);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = result;
+            break;
+        }
+        case "dec-bin": {
+            const dec = modalInput.value;
+            const result = Prefix.decToBin(dec);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = result;
+            break;
+        }
+        case "bin-dec": {
+            const bin = modalInput.value;
+            const result = Prefix.binToDec(bin);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = result.toString(); 
+            break;
+        }
+        case "hex-dec": {
+            const hex = modalInput.value;
+            const result = Prefix.hexToDec(hex);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = result.toString(); 
+            break;
+        }
+        case "dec-hex": {
+            const dec = modalInput.value;
+            const result = Prefix.decToHex(dec);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = result;
+            break;
+        }
+        // Validations operation.
+        case "ipv6-format": {
+            const ipv6 = modalInput.value;
+            const result = Prefix.ipv6Format(ipv6);
+
+            if (!result) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = "Valid IPv6 Address Format.";
+            break;
+        }
+        case "mac-format": {
+            const maca = modalInput.value;
+            const result = Prefix.macaFormat(maca);
+
+            if (!result) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = "Valid MAC Address Format.";            
+            break;
+        }
+        case "ipv6-type": {
+            
+            break;
+        }
+        // Generates operation.
+        case "interfaceID-eui-64": {
+            const maca = modalInput.value;
+            const result = Prefix.eui_64(maca);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = result;
+            break;
+        }
+        case "ipv6-eui-64": {
+            
+            break;
+        }
+        case "solicited-node":{
+            const ipv6 = modalInput.value;
+            const result = Prefix.solicitedNode(ipv6);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = result;
+            break;
+        }
+        case "link-local": {
+            const maca = modalInput.value;
+            const result = Prefix.linkLocal(maca);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = result;
+            break;
+        }
+        // Utilities operation.
+        case "abbreviate": {
+            const ipv6 = modalInput.value;
+            const result = Prefix.abbreviate(ipv6);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = result;
+            break;
+        }
+        case "expand": {
+            const ipv6 = modalInput.value;
+            const result = Prefix.expand(ipv6);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                break;
+            }
+
+            modalOutput.innerText = result;
+            break;
+        }
+        default:
+            console.log("Unkown Operation!")
+            break;
+    }
+}
+
+export const reverseConversion = () => {
+    /**
+     * This function will reverse the label in conversion feature.
+     */
+
+    // Extract info from data-* attributes.
+    const conversionType = modalSwitchButton.getAttribute("data-modal-operation") as string;
+    const input = modalSwitchButton.getAttribute('data-input') as string;
+    const output = modalSwitchButton.getAttribute('data-output') as string;
+    
+    // Update modal's content.
+    modalInputLabel.innerText = input;
+    modalOutputLabel.innerText = output;
+
+    // Tell the modal's submit button what operation to perform.
+    modalSubmitButton.setAttribute("data-modal-operation", conversionType);
+    
+    // Reverse the data attributes for the opposite conversion.
+    const conversionTypeArray = conversionType.split("-")
+    modalSwitchButton.setAttribute("data-modal-operation", `${conversionTypeArray[1]}-${conversionTypeArray[0]}`);
+    modalSwitchButton.setAttribute("data-input", `${output}`);
+    modalSwitchButton.setAttribute("data-output", `${input}`);
 }
