@@ -1,5 +1,5 @@
 import Prefix from "./ipv6.js";
-import { render, renderWarningMessage } from "./view.js";
+import { render, renderWarningMessage, resetModalContent, resetFormValidation} from "./view.js";
 
 const ipv6AddressInput = document.getElementById("ipv6Address") as HTMLInputElement;
 const prefixLengthInput = document.getElementById("prefixLength") as HTMLInputElement;
@@ -7,22 +7,26 @@ const subnetBitsInput = document.getElementById("subnetBits") as HTMLInputElemen
 const outputSection = document.getElementById("outputSection") as HTMLDivElement;
 const subnetNumberInput = document.getElementById("subnetNumber") as HTMLInputElement;
 const modalHeading = document.querySelector('.modal-title') as HTMLHeadElement;
+const modalBody = document.querySelector(".modal-body") as HTMLElement
 const modalInputLabel = document.getElementById("modal-input-label") as HTMLLabelElement;
 const modalInput = document.getElementById("modal-input") as HTMLInputElement;
-const modalOutput = document.getElementById("modal-output") as HTMLInputElement;
+const modalOutput = document.getElementById("modal-output") as HTMLOutputElement;
 const modalOutputLabel = document.getElementById("modal-output-label") as HTMLLabelElement;
 const modalSwitchButton = document.getElementById("modal-switch-button") as HTMLButtonElement;
 const ipv6TypeSource = document.getElementById("modalSourceLink") as HTMLAnchorElement;
 const modalSubmitButton = document.getElementById("modal-submit-button") as HTMLButtonElement;
 
-const checkInputs = function (ipv6Address: string, prefixLength: number, subnetBits: number, subnetToFind: string): boolean | Error {
+const checkInputs = function (): boolean | Error {
     /**
      * This function will check user's inputs: ipv6 address, prefix length,
      * subnet bits and the particular subnet user's looking for.
      */
 
     try {
-        const numOfNetworks = BigInt(2 ** subnetBits) - 1n;
+        const ipv6Address = ipv6AddressInput.value;
+        const prefixLength = prefixLengthInput.value;
+        const subnetBits = subnetBitsInput.value;
+        const subnetToFind = subnetNumberInput.value;        
         let errorCount = 0;
         let errorMessage = "";
 
@@ -37,7 +41,7 @@ const checkInputs = function (ipv6Address: string, prefixLength: number, subnetB
             errorCount++;
         }
         // Check the prefix length.
-        if (prefixLengthInput.value === '' || prefixLength <= 0 || prefixLength >= 128) {
+        if (prefixLengthInput.value === '' || parseInt(prefixLength) <= 0 || parseInt(prefixLength) >= 128) {
             // Remove first the .is-valid if it's exists.
             prefixLengthInput.classList.remove("is-valid");
             // Then add .is-invalid.
@@ -47,7 +51,7 @@ const checkInputs = function (ipv6Address: string, prefixLength: number, subnetB
             errorCount++;
         }
         // Check the subnet bits.
-        if (subnetBitsInput.value === '' || subnetBits < 0 || prefixLength + subnetBits >= 126) {
+        if (subnetBitsInput.value === '' || parseInt(subnetBits) < 0 || parseInt(prefixLength) + parseInt(subnetBits) >= 126) {
             // Remove first the .is-valid if it's exists.
             subnetBitsInput.classList.remove("is-valid");
             // Then add .is-invalid.
@@ -57,6 +61,7 @@ const checkInputs = function (ipv6Address: string, prefixLength: number, subnetB
             errorCount++;
         }   
         // Check the subnet that is looking for.
+        const numOfNetworks = BigInt(2 ** parseInt(subnetBits)) - 1n;
         if (BigInt(subnetToFind) < 0 || BigInt(subnetToFind) > numOfNetworks ) {
             // Set error message.
             errorMessage = `Subnet ${subnetToFind} does not exists!`;
@@ -77,7 +82,9 @@ const checkInputs = function (ipv6Address: string, prefixLength: number, subnetB
         return true;
 
     } catch (error: any) {
+
         console.log(error);
+        if (error instanceof RangeError) return new Error("Incorrect IP information.")
         return new Error(error.message);
     }        
 }
@@ -95,25 +102,23 @@ export const getPrefix = function (subnetToFind: string="0"): void {
      * HTML document.      
     */
 
-    const ipv6Value = ipv6AddressInput.value;
-    const prefixLengthValue = parseInt(prefixLengthInput.value);
-    const subnetBitsValue = parseInt(subnetBitsInput.value);
-    const numOfSubnets = BigInt(2 ** subnetBitsValue);
-
     // Check user inputs
-    const result = checkInputs(ipv6Value, prefixLengthValue, subnetBitsValue, subnetToFind);
+    const result = checkInputs();
     // If they are invalid, then display error messages.
     if (result instanceof Error) {
         renderWarningMessage(result, outputSection);
         return;
     }
 
-    // Otherwise valid, proceed with the following codes.
-
+    const ipv6Value = ipv6AddressInput.value;
+    const prefixLengthValue = parseInt(prefixLengthInput.value);
+    const subnetBitsValue = parseInt(subnetBitsInput.value);
+        
     // Get the prefix.
     const prefix = Prefix.getPrefix(ipv6Value, prefixLengthValue, subnetBitsValue, subnetToFind) as Prefix;
-
+    
     // Set the max attribute of the subnet number input for users convenience.    
+    const numOfSubnets = BigInt(2 ** subnetBitsValue);
     subnetNumberInput.setAttribute("max", `${numOfSubnets - 1n}`);
 
     // Display the prefix.
@@ -131,9 +136,7 @@ export const updateModalContent = (
      */    
     
     // First, reset modal's content.
-    modalInput.value = "";
-    modalOutput.textContent = "Output";
-    modalInput.classList.remove("is-invalid", "is-valid");
+    resetModalContent(modalInput, modalOutput, modalBody);
 
     // Update the modal title.
     modalHeading.textContent = modalTitle;
@@ -146,16 +149,15 @@ export const updateModalContent = (
         // Update modal's ouput label.
         modalOutputLabel.textContent = "Output";
         // Hide the switch button.
-        modalSwitchButton.classList.remove("visible");
-        modalSwitchButton.classList.add("invisible");
+        modalSwitchButton.classList.remove("visually-hidden");
+        modalSwitchButton.classList.add("visually-hidden");
     } else if (modalTitle === "Generates") {
         // Hide the switch button.
-        modalSwitchButton.classList.remove("visible");
-        modalSwitchButton.classList.add("invisible");
+        modalSwitchButton.classList.remove("visually-hidden");
+        modalSwitchButton.classList.add("visually-hidden");
     } else {
         // Otherwise the modal is for conversions, show the switch button.
-        modalSwitchButton.classList.remove("invisible");
-        modalSwitchButton.classList.add("visible");
+        modalSwitchButton.classList.remove("visually-hidden");        
     }
 
     // Determine whether to show modal's source link or not.
@@ -187,6 +189,10 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(result, modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output";
                 break;
             }
 
@@ -195,7 +201,7 @@ export const modalOperation = (operation: string) => {
         }
             
         case "hex-bin": {
-            const hex = modalInput.value;
+            const hex = modalInput.value.toLowerCase();
             const result = Prefix.hexToBin(hex);
 
             if (result instanceof Error) {
@@ -203,6 +209,10 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(result, modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output";
                 break;
             }
 
@@ -218,6 +228,10 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(new Error("Input must be integers!"), modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output";                
                 break;
             }
 
@@ -233,6 +247,10 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(result, modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output";
                 break;
             }
 
@@ -240,7 +258,7 @@ export const modalOperation = (operation: string) => {
             break;
         }
         case "hex-dec": {
-            const hex = modalInput.value;
+            const hex = modalInput.value.toLowerCase();
             const result = Prefix.hexToDec(hex);
 
             if (result instanceof Error) {
@@ -248,6 +266,10 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(result, modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output";
                 break;
             }
 
@@ -263,6 +285,10 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(new Error("Input must be integers!"), modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output";                
                 break;
             }
 
@@ -271,7 +297,7 @@ export const modalOperation = (operation: string) => {
         }
         // Validations operation.
         case "ipv6-format": {
-            const ipv6 = modalInput.value;
+            const ipv6 = modalInput.value.toLowerCase();
             const result = Prefix.ipv6Format(ipv6);
 
             if (!result) {
@@ -279,6 +305,10 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(new Error("Invalid IPv6 Address Format"), modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output"; 
                 break;
             }
 
@@ -286,7 +316,7 @@ export const modalOperation = (operation: string) => {
             break;
         }
         case "mac-format": {
-            const maca = modalInput.value;
+            const maca = modalInput.value.toLowerCase();
             const result = Prefix.macaFormat(maca);
 
             if (!result) {
@@ -294,6 +324,10 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(new Error("Invalid MAC Address Format"), modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output"; 
                 break;
             }
 
@@ -306,7 +340,7 @@ export const modalOperation = (operation: string) => {
         }
         // Generates operation.
         case "interfaceID-eui-64": {
-            const maca = modalInput.value;
+            const maca = modalInput.value.toLowerCase();
             const result = Prefix.eui_64(maca);
 
             if (result instanceof Error) {
@@ -314,18 +348,38 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(result, modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output";
                 break;
             }
 
-            modalOutput.innerText = result;
+            modalOutput.innerText = result.toUpperCase();
             break;
         }
         case "ipv6-eui-64": {
-            
+            const ipv6Address = ipv6AddressInput.value.toLowerCase();
+            const maca = modalInput.value.toLowerCase();
+            const result = Prefix.ipv6_eui64(ipv6Address, maca);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");
+                // Then add .is-invalid.
+                modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(result, modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output";
+                break;
+            }
+
+            modalOutput.innerText = result.toUpperCase();
             break;
         }
         case "solicited-node":{
-            const ipv6 = modalInput.value;
+            const ipv6 = modalInput.value.toLowerCase();
             const result = Prefix.solicitedNode(ipv6);
 
             if (result instanceof Error) {
@@ -333,14 +387,18 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(result, modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output";
                 break;
             }
 
-            modalOutput.innerText = result;
+            modalOutput.innerText = result.toUpperCase();
             break;
         }
         case "link-local": {
-            const maca = modalInput.value;
+            const maca = modalInput.value.toLowerCase();
             const result = Prefix.linkLocal(maca);
 
             if (result instanceof Error) {
@@ -348,15 +406,19 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(result, modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output";
                 break;
             }
 
-            modalOutput.innerText = result;
+            modalOutput.innerText = result.toUpperCase();
             break;
         }
         // Utilities operation.
         case "abbreviate": {
-            const ipv6 = modalInput.value;
+            const ipv6 = modalInput.value.toLowerCase();
             const result = Prefix.abbreviate(ipv6);
 
             if (result instanceof Error) {
@@ -364,14 +426,18 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(result, modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output";
                 break;
             }
 
-            modalOutput.innerText = result;
+            modalOutput.innerText = result.toUpperCase();
             break;
         }
         case "expand": {
-            const ipv6 = modalInput.value;
+            const ipv6 = modalInput.value.toLowerCase();
             const result = Prefix.expand(ipv6);
 
             if (result instanceof Error) {
@@ -379,10 +445,14 @@ export const modalOperation = (operation: string) => {
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
+                // Display error message.
+                renderWarningMessage(result, modalBody);
+                // Reset the output text.
+                modalOutput.innerText = "Output";
                 break;
             }
 
-            modalOutput.innerText = result;
+            modalOutput.innerText = result.toUpperCase();
             break;
         }
         default:
@@ -401,6 +471,9 @@ export const reverseConversion = () => {
     const input = modalSwitchButton.getAttribute('data-input') as string;
     const output = modalSwitchButton.getAttribute('data-output') as string;
     
+    // First, reset modal's content.
+    resetModalContent(modalInput, modalOutput, modalBody);
+
     // Update modal's content.
     modalInputLabel.innerText = input;
     modalOutputLabel.innerText = output;

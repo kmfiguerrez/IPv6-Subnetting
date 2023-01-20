@@ -1,5 +1,5 @@
 import { getPrefix, updateModalContent, modalOperation, reverseConversion } from "./controller.js";
-import Prefix from "./ipv6.js";
+
 
 
 const formButton = document.getElementById("formButton") as HTMLButtonElement;
@@ -43,7 +43,7 @@ Array.from(formInputs).forEach(input => {
 // Form submit button event.
 formButton.addEventListener("click", (e) => {
     // By default, display the first subnet(subnet zero).
-    console.log(e instanceof FocusEvent )
+    
     // Make sure first that the subnet number always starts with 0.
     subnetNumberInput.value = "0";
 
@@ -119,6 +119,7 @@ modalSubmitButton.addEventListener("click", () => {
     modalOperation(operation);
 })
 
-const res = Prefix.ipv6_eui64("aaaa:bbbb:cccc:dddd:eeee:ffff:aaaa:bbbb", "00-11-22-33-44-55");
+// const res = Prefix.ipv6_eui64("aaaa:bbbb:cccc:dddd:eeee:ffff:aaaa:bbbb", "00-11-22-33-44-55");
 // const res = Prefix.eui_64("00-11-22-33-44-55")
-console.log(res);
+// const res = Prefix.abbreviate("0aaa:b0bb:cc0c:dddd:eee0:ffff:aaaa:000b")
+// console.log(res);

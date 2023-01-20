@@ -109,3 +109,29 @@ export const renderWarningMessage = function (error: Error, attachTo: HTMLElemen
     
     attachTo.insertAdjacentElement("afterbegin", alert);
 }
+
+export const resetModalContent = (modalInput: HTMLInputElement, modalOutput: HTMLOutputElement, modalBody: HTMLElement) => {
+    /**
+     * This function will resets modal's content.     
+     */
+    
+    modalInput.value = "";
+    modalOutput.textContent = "Output";
+    modalInput.classList.remove("is-invalid", "is-valid");
+
+    // The alert component should not show up in newly opened modal.
+    const firstChild = modalBody.firstElementChild;
+    if (firstChild instanceof HTMLDivElement) {
+        modalBody.removeChild(firstChild);
+    }
+}
+
+export const resetFormValidation = (ipv6Address: HTMLInputElement, prefixLength: HTMLInputElement, subnetBits: HTMLInputElement) => {
+    /**
+     * This function will reset main form validation text.
+     */
+
+    ipv6Address.classList.remove("is-invalid", "is-valid");
+    prefixLength.classList.remove("is-invalid", "is-valid");
+    subnetBits.classList.remove("is-invalid", "is-valid");
+}

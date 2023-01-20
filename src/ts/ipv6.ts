@@ -146,7 +146,7 @@ export default class Prefix {
         
         try {
             // Check input.
-            if (this.ipv6Format(ipv6Address) === false) throw new Error("Invalid IPv6 format!");
+            if (this.ipv6Format(ipv6Address) === false) throw new Error("Invalid IPv6 Address!");
             
             let ipv6Array: Array<string> = [];
             
@@ -202,169 +202,186 @@ export default class Prefix {
         
         try {
             // Check input.
-            if (this.ipv6Format(ipv6Address) === false) throw new Error("Invalid IPv6 format!");
+            if (this.ipv6Format(ipv6Address) === false) throw new Error("Invalid IPv6 Address!");
             
             /*
              Make sure that the input is in unabbreviated form.
              Because expand() method can return either a string or an Error
-             let's do narrowing. So that Typescript knows what type of value
+             let's do type casting. So that Typescript knows what type of value
              we want to work with.
             */
-            const result = this.expand(ipv6Address);
-            console.log(result)
-            let ipv6Array: Array<string> = [];
+            const result = this.expand(ipv6Address) as string;
+            let ipv6Array: Array<string> = result.split(":");
+            let segmentsOfZerosCount = 0; // Segment of zeros counter.
+            let doubleColonExists = false;
             let ipv6 = ""; // To be returned.
 
-            if (typeof result === "string") {
-                // If result is a string, then Typescript knows we want to work with string.
-                // result variable is now of type string.
-                ipv6Array = result.split(":");
+            // First part, omit leading zeros.
+            ipv6Array = ipv6Array.map(elem => {
+                let hexZeroCount = 0; // Hex zero counter.
+                let newSegment = '';
                 
-                // First, omit leading zeros.
-                ipv6Array = ipv6Array.map(elem => {
-                    let hexZeroCount = 0; // Hex zero counter.
-                    let newSegment = '';
-                    
-                    for (const char of elem) {          
-                        // Get the first non-zero hex digit it detects and the rest of the digts in a segment.   
-                        if (char !== "0") {                    
-                            const indexOfNonZeroHex = elem.indexOf(char);
-                            newSegment = elem.slice(indexOfNonZeroHex);
-                            break;
-                        }
-                        else {
-                            // If char is zero increment the counter by 1.
-                            hexZeroCount++;
-                        }
-
-                        // If a segment has all zeros it leaves a single 0.
-                        if (hexZeroCount === 4) {
-                            newSegment = "0";
-                        }
-                    }
-                    
-                    return newSegment;
-                })
-                console.log(ipv6Array)
-                console.log(ipv6Array[7])
-                // Second, Substitute double colons(::) into multiple consecutive segments of all zeros.
-                // Check first if there's two instaces of segments of all zeros in a row.
-                let instances: Array<number> = [];
-                let segmentsOfZerosCount = 0; // Segment of zeros counter.
-                let currentIndex = 0; // used to keep track the current index in a loop.
-
-                ipv6Array.forEach(elem => {
-                    
-                    if (elem === "0") {
-                        segmentsOfZerosCount++;
+                for (const char of elem) {          
+                    // Get the first non-zero hex digit it detects and the rest of the digts in a segment.   
+                    if (char !== "0") {                    
+                        const indexOfNonZeroHex = elem.indexOf(char);
+                        newSegment = elem.slice(indexOfNonZeroHex);
+                        break;
                     }
                     else {
-                        segmentsOfZerosCount = 0;
+                        // If char is zero increment the counter by 1.
+                        hexZeroCount++;
                     }
-                    
-                    // Add instaces of string of segments of all zeros.
-                    if (segmentsOfZerosCount === 2) {
-                        const indexOfAnInstance = currentIndex - 1;
-                        instances.push(indexOfAnInstance)
-                    }            
-                    currentIndex++;
-                })
-                
-                // Then if there's two instances then we should pick the longest sequence.
-                if (instances.length === 2) {
-                    const firstInstanceIndex = instances[0];
-                    const secondInstanceIndex = instances[1];
-                    let firstInstanceLength = 0; // Length means number of segments of all zeros.
-                    let secondInstanceLength = 0; // Length means number of segments of all zeros.
 
-                    // Get the length of the first instance.
-                    for (const elem of ipv6Array.slice(firstInstanceIndex, secondInstanceIndex)) {
-                        // If elem not equal to zero means end of a string of segments of all zeros                  
-                        // because the sliced array could contain segment of zeros after a non-zeros of segment.
-                        if (elem !== "0") {
-                            break;
-                        }
-                        else{
-                            // Otherwise keep incrementing.
-                            firstInstanceLength++;
-                        }
+                    // If a segment has all zeros it leaves a single 0.
+                    if (hexZeroCount === 4) {
+                        newSegment = "0";
                     }
-                    // Get the length of the second instance.
-                    for (const elem of ipv6Array.slice(secondInstanceIndex)) {
-                        // If elem not equal to zero means end of a string of segments of all zeros                  
-                        // because the sliced array could contain segment of zeros after a non-zeros of segment.
-                        if (elem !== "0") {
-                            break;
-                        }
-                        else {
-                            secondInstanceLength++;
-                        }
-                    }
-         
-                    // Then compare the two lengths.            
-                    if (firstInstanceLength > secondInstanceLength) {
-                        // * is inserted to mark for double colon(::).
-                        ipv6Array.splice(firstInstanceIndex, firstInstanceLength, "*");
-                    }
-                    else if(secondInstanceLength > firstInstanceLength) {
-                        // * is inserted to mark for double colon(::).
-                        ipv6Array.splice(secondInstanceIndex, secondInstanceLength, "*");
-                    }
-                    else {
-                        // Otherwise the two lengths are equal, pick the second instance.
-                        // * is inserted to mark for double colon(::).
-                        ipv6Array.splice(secondInstanceIndex, secondInstanceLength, "*");
-                    }
-                }
-                // If there's only one instace.
-                else if(instances.length === 1){            
-                    const instanceIndex = instances[0];
-                    let instanceLength = 0; // Length means number of segments of all zeros.
-                    for (const elem of ipv6Array.slice(instanceIndex)) {
-                        // If elem not equal to zero means end of a string of segments of all zeros                  
-                        // because the sliced array could contain segment of zeros after a non-zeros of segment.
-                        if (elem !== "0") {
-                            break
-                        }
-                        else {
-                            instanceLength++;
-                        }                
-                    }
-                    // * is inserted to mark for double colon(::). 
-                    ipv6Array.splice(instanceIndex, instanceLength, "*");
                 }
                 
-                // Write the ipv6 address in a colon notation.
-                const doubleColonIndex = ipv6Array.indexOf("*");
-                // Note that * depicts ::
-                if (doubleColonIndex === 0) {
-                    // If * occurs at the beginning.
-                    // Replace it with :
-                    ipv6Array.splice(0, 1, ":");
-                }
-                else if (doubleColonIndex === ipv6Array.length - 1) {
-                    // If * occurs at the end.
-                    // Replace it with :
-                    ipv6Array.splice(-1, 1, ":");
+                return newSegment;
+            })
+            
+            // Check for a series of segments of all 0s.
+            for (const elem of ipv6Array) {
+                if (elem === "0") {
+                    segmentsOfZerosCount++;
                 }
                 else {
-                    // If * exists somewhere neither at the beginning nor end.
-                    // Replace it with empty string.
-                    ipv6Array.splice(doubleColonIndex, 1, "");
-                }                
+                    segmentsOfZerosCount = 0;
+                }
                 
-                // Finally return ipv6 as string.
+                if (segmentsOfZerosCount === 2) {
+                    doubleColonExists = true;
+                    break;
+                }
+            }
+            
+            /*
+             If there's no series of all 0s , then return it immediately
+             to avoid the second part of this method that could cause bugs if 
+             series of all 0s isn't it present.
+            */
+            if (!doubleColonExists) {
+                // Turn the array into a colon notation, then return it.
                 ipv6 = ipv6Array.join(":");
                 return ipv6;
-
-            } else {
-                /*
-                 Otherwise result is an Error.
-                 result variable is now of type Error(which is actually a function type
-                 because Error is a function constructor).
-                */
-                throw new Error(result.message)   
             }
+            
+            // Otherwise series of all 0s exists.
+            // Second part, Substitute double colons(::) into multiple consecutive segments of all zeros.
+            // Check first if there's two instaces of segments of all zeros in a row.
+            let instances: Array<number> = [];
+            segmentsOfZerosCount = 0; // Segment of zeros counter.
+            let currentIndex = 0; // used to keep track the current index in a loop.
+            
+            ipv6Array.forEach(elem => {
+                
+                if (elem === "0") {
+                    segmentsOfZerosCount++;
+                }
+                else {
+                    segmentsOfZerosCount = 0;
+                }
+                
+                // Add instaces of string of segments of all zeros.
+                if (segmentsOfZerosCount === 2) {
+                    const indexOfAnInstance = currentIndex - 1;
+                    instances.push(indexOfAnInstance)
+                }            
+                currentIndex++;
+            })
+            
+            // Then if there's two instances then we should pick the longest sequence.
+            if (instances.length === 2) {
+                const firstInstanceIndex = instances[0];
+                const secondInstanceIndex = instances[1];
+                let firstInstanceLength = 0; // Length means number of segments of all zeros.
+                let secondInstanceLength = 0; // Length means number of segments of all zeros.
+
+                // Get the length of the first instance.
+                for (const elem of ipv6Array.slice(firstInstanceIndex, secondInstanceIndex)) {
+                    // If elem not equal to zero means end of a string of segments of all zeros                  
+                    // because the sliced array could contain segment of zeros after a non-zeros of segment.
+                    if (elem !== "0") {
+                        break;
+                    }
+                    else{
+                        // Otherwise keep incrementing.
+                        firstInstanceLength++;
+                    }
+                }
+                // Get the length of the second instance.
+                for (const elem of ipv6Array.slice(secondInstanceIndex)) {
+                    // If elem not equal to zero means end of a string of segments of all zeros                  
+                    // because the sliced array could contain segment of zeros after a non-zeros of segment.
+                    if (elem !== "0") {
+                        break;
+                    }
+                    else {
+                        secondInstanceLength++;
+                    }
+                }
+     
+                // Then compare the two lengths.            
+                if (firstInstanceLength > secondInstanceLength) {
+                    // * is inserted to mark for double colon(::).
+                    ipv6Array.splice(firstInstanceIndex, firstInstanceLength, "*");
+                }
+                else if(secondInstanceLength > firstInstanceLength) {
+                    // * is inserted to mark for double colon(::).
+                    ipv6Array.splice(secondInstanceIndex, secondInstanceLength, "*");
+                }
+                else {
+                    // Otherwise the two lengths are equal, pick the second instance.
+                    // * is inserted to mark for double colon(::).
+                    ipv6Array.splice(secondInstanceIndex, secondInstanceLength, "*");
+                }
+            }
+            // If there's only one instace.
+            else if(instances.length === 1){            
+                const instanceIndex = instances[0];
+                let instanceLength = 0; // Length means number of segments of all zeros.                
+                for (const elem of ipv6Array.slice(instanceIndex)) {
+                    // If elem not equal to zero means end of a string of segments of all zeros                  
+                    // because the sliced array could contain segment of zeros after a non-zeros of segment.
+                    if (elem !== "0") {
+                        break
+                    }
+                    else {
+                        instanceLength++;
+                    }                
+                }
+                // * is inserted to mark for double colon(::). 
+                ipv6Array.splice(instanceIndex, instanceLength, "*");
+            }
+            
+            // Write the ipv6 address in a colon notation.
+            const doubleColonIndex = ipv6Array.indexOf("*");
+            // Note that * depicts ::
+            if (doubleColonIndex === 0 && ipv6Array.length === 1) {
+                // If the whole address is 0s.
+                ipv6Array.splice(0, 1, "::");
+            }
+            else if (doubleColonIndex === 0) {
+                // If * occurs at the beginning.
+                // Replace it with :
+                ipv6Array.splice(0, 1, ":");
+            }
+            else if (doubleColonIndex === ipv6Array.length - 1) {
+                // If * occurs at the end.
+                // Replace it with :
+                ipv6Array.splice(-1, 1, ":");
+            }
+            else {
+                // If * exists somewhere neither at the beginning nor end.
+                // Replace it with empty string.
+                ipv6Array.splice(doubleColonIndex, 1, "");
+            }                
+            
+            // Finally return ipv6 as string.
+            ipv6 = ipv6Array.join(":");
+            return ipv6;                
             
         } catch (error: any) {
             console.log(error);
@@ -475,7 +492,7 @@ export default class Prefix {
         try {
             // Check input.
             // Valid binaries are 1 and 0 only.            
-            if (!this.isBinary(bin)) throw new Error("Invalid character entered!");    
+            if (!this.isBinary(bin)) throw new Error("Invalid Binary character entered!");    
             
             let hexadecimals: string = "";  // To be returned.            
 
@@ -549,7 +566,7 @@ export default class Prefix {
 
         try {
             // Check input.
-            if (!this.isBinary(bin)) throw new Error("Input must be 1 and 0 only!");
+            if (!this.isBinary(bin)) throw new Error("Invalid Binary character entered!");
             
             // Convert bin to bigint.
             const dec = BigInt(`0b${bin}`);
@@ -571,7 +588,7 @@ export default class Prefix {
 
         try {
             // Check input.
-            if (!this.isHex(hex)) throw new Error("Invalid hex character!");
+            if (!this.isHex(hex)) throw new Error("Invalid Hex character entered!");
 
             // Convert hex to bigint.
             const dec = BigInt(`0x${hex}`);
@@ -671,9 +688,9 @@ export default class Prefix {
         } catch (error:any) {
             console.log(error);
             return new Error(error.message);
-        }
-        
+        }                
     }
+
 
     static binToIPv6 (bin: string): string | Error {
         /**
@@ -982,7 +999,8 @@ export default class Prefix {
 
         try {
             // Check inputs.
-            if (!this.ipv6Format(ipv6Address)) throw new Error("Invalid IPv6 Address!");
+            if (ipv6Address === '') throw new Error("Include an IPv6 Address in the background!");
+            if (!this.ipv6Format(ipv6Address)) throw new Error("Invalid IPv6 Address!");            
             if (!this.macaFormat(macAddress)) throw new Error("Invalid MAC Address!");
 
             // Expand the ipv6 address first.
@@ -998,7 +1016,6 @@ export default class Prefix {
             const unicastIPv6 = networkPortion + interfaceID;
 
             // Finally return unicast ipv6 address abbreviated.
-            // console.log(unicastIPv6)
             return this.abbreviate(unicastIPv6);
             
         } catch (error: any) {
