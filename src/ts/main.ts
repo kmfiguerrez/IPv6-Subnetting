@@ -1,7 +1,5 @@
 import { getPrefix, updateModalContent, modalOperation, reverseConversion } from "./controller.js";
 
-
-
 const formButton = document.getElementById("formButton") as HTMLButtonElement;
 const forms = document.querySelectorAll('form');
 const formInputs = document.querySelectorAll("input[class='form-control']") as NodeListOf<HTMLInputElement>;
@@ -44,11 +42,11 @@ Array.from(formInputs).forEach(input => {
 formButton.addEventListener("click", (e) => {
     // By default, display the first subnet(subnet zero).
     
-    // Make sure first that the subnet number always starts with 0.
-    subnetNumberInput.value = "0";
+    // Reset Subnet number.
+    subnetNumberInput.value = "";
 
-    // reset host value.
-    host.innerHTML = "0";
+    // Reset host value.
+    host.innerHTML = "";
 
     /*
      The getPrefix() will calculate the prefix and display
@@ -122,4 +120,5 @@ modalSubmitButton.addEventListener("click", () => {
 // const res = Prefix.ipv6_eui64("aaaa:bbbb:cccc:dddd:eeee:ffff:aaaa:bbbb", "00-11-22-33-44-55");
 // const res = Prefix.eui_64("00-11-22-33-44-55")
 // const res = Prefix.abbreviate("0aaa:b0bb:cc0c:dddd:eee0:ffff:aaaa:000b")
+// const res = Prefix.isHex("")
 // console.log(res);

@@ -6,101 +6,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./src/dist/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;600;700&family=Roboto+Mono:wght@100;300;400&display=swap" rel="stylesheet">
     <title>IPv6 Subnetting</title>
 </head>
 <body style="font-family: 'Montserrat', sans-serif;">
-    <div class="container">
+    <div class="container-fluid bg-dark text-white">
 
         <!-- Nav section -->
-        <nav class="navbar navbar-expand-sm navbar-light bg-transparent mb-3 mb-md-5">
-            <div class="container px-0">
-                <a class="navbar-brand" href="#">IPV6 SUBNETTING</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div class="navbar-nav ms-auto">
-                        <a class="nav-link" data-bs-toggle="offcanvas" href="#offcanvas" aria-controls="offcanvas">Features</a>
-                        <a class="nav-link" href="#infoSection">info</a>                         
+        <header class="container px-0">
+            <nav class="navbar navbar-expand-sm navbar-dark bg-transparent mb-3 mb-md-5">
+                <div class="container px-0">
+                    <a class="navbar-brand fw-semibold" href="#">IPV6 SUBNETTING</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="navbar-nav ms-auto">
+                            <a class="nav-link" data-bs-toggle="offcanvas" href="#offcanvas" aria-controls="offcanvas">Features</a>
+                            <a class="nav-link" href="#infoSection">info</a>                         
+                        </div>
                     </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </header>        
 
         <!-- Main Section -->
         <main class="container min-vh-100 px-0">
             <!-- Form Section -->
             <form class="mb-5">
-                <div class="mb-3">
-                    <label for="ipv6Address" class="form-label">IPv6 Address</label>
-                    <input type="text" class="form-control" id="ipv6Address" placeholder="" autocomplete="off">
-                    <div class="valid-feedback">
-                        Looks Good!
-                    </div> 
-                    <div class="invalid-feedback">
-                        Invalid IPv6 entry!
-                    </div> 
-                </div>
-                <div class="mb-3">
-                    <label for="prefixLength" class="form-label">Prefix Length</label>
-                    <input type="number" class="form-control" id="prefixLength" min="0" autocomplete="off">
-                    <div class="valid-feedback">
-                        Looks Good!
-                    </div> 
-                    <div class="invalid-feedback">
-                        Invalid Prefix Length entry!
-                    </div> 
-                </div>
-                <div class="mb-3">
-                    <label for="subnetBits" class="form-label">Subnet Bits</label>
-                    <input type="number" class="form-control" id="subnetBits" min="0" max="125" autocomplete="off">
-                    <div class="valid-feedback">
-                        Looks Good!
-                    </div> 
-                    <div class="invalid-feedback">
-                        Invalid Subnet Bits entry!
+                <div class="row g-3 mb-4">
+                    <div class="col-12">
+                        <label for="ipv6Address" class="form-label">IPv6 Address</label>
+                        <input type="text" class="form-control" id="ipv6Address" placeholder="" autocomplete="off" style="font-family: 'Roboto Mono', monospace;">
+                        <div class="valid-feedback">
+                            Looks Good!
+                        </div> 
+                        <div class="invalid-feedback">
+                            Invalid IPv6 entry!
+                        </div>
                     </div>
-                </div>       
-                <button id="formButton" class="btn btn-primary">Submit</button>
+                    <div class="col-6">
+                        <label for="prefixLength" class="form-label">Prefix Length</label>
+                        <input type="number" class="form-control" id="prefixLength" min="0" autocomplete="off" style="font-family: 'Roboto Mono', monospace;">
+                        <div class="valid-feedback">
+                            Looks Good!
+                        </div> 
+                        <div class="invalid-feedback">
+                            Invalid Prefix Length entry!
+                        </div> 
+                    </div>
+                    <div class="col-6">
+                        <label for="subnetBits" class="form-label">Subnet Bits</label>
+                        <input type="number" class="form-control" id="subnetBits" min="0" max="125" autocomplete="off" style="font-family: 'Roboto Mono', monospace;">
+                        <div class="valid-feedback">
+                            Looks Good!
+                        </div> 
+                        <div class="invalid-feedback">
+                            Invalid Subnet Bits entry!
+                        </div>
+                    </div>
+                </div>
+                <button id="formButton" class="btn btn-outline-primary">Submit</button>
+                <!-- <div class="d-grid gap-2">
+                    <button id="formButton" class="btn btn-outline-primary">Submit</button>
+                    <button class="btn btn-primary" type="button">Button</button>
+                </div>                           -->
             </form>
 
             <!-- Output Section-->
             <div id="outputSection" class="pb-5">
                 <!-- <h2 id="output-header" class="text-center visually-hidden">OUTPUT</h2> -->
-                <p id="caption">OUTPUT</p>
-                <div class="row mb-2 border-bottom mx-0">
-                    <div class="col ps-0">
+                <div class="row mb-2">
+                    <div class="col-12 col-md-4">
                         <form>
-                            <label for="subnetNumber" class="fw-bold">Subnet:</label>
-                            <input id="subnetNumber" type="number" class="border-0" min="0" value="0"/>
-                        </form>                        
+                            <label for="subnetNumber" class="fw-semibold">Subnet:</label>
+                            <input id="subnetNumber" type="number" class="border-0 bg-transparent text-white" min="0"/>
+                        </form> 
                     </div>
-                    <div class="col-12 ps-0">                        
-                        <span class="fw-bold">Hosts:</span> <span id="host">0</span>
-                    </div>                    
+                    <div class="col-12 col-md-4">
+                        <span class="fw-semibold">Network</span><span class="text-muted">(s)</span>: <span id="subnets" class="text-break"></span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <span class="fw-semibold">Hosts:</span> <span id="host" class="text-break"></span>
+                    </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-10 col-sm-2 fw-bold">Prefix</div>
-                    <div class="col-12 col-sm-8 order-1 order-sm-0" id="prefix">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
-                    <div class="col-2 col-sm-2 order-0 order-sm-1">/0</div>
+                    <div class="col-12 col-md-4 col-lg-3 col-xl-4 fw-semibold">Prefix:</div>
+                    <div class="col-12 col-md-4 col-lg-5 col-xl-4 text-break" id="prefix">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
+                    <div class="col-12 col-md-4">/x</div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-10 col-sm-2 fw-bold">First Usable Address</div>
-                    <div class="col-12 col-sm-8 order-1 order-sm-0" id="firstUsableAddress">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
-                    <div class="col-2 col-sm-2 order-0 order-sm-1">/0</div>
+                    <div class="col-12 col-md-4 col-lg-3 col-xl-4 fw-semibold">First Usable Address:</div>
+                    <div class="col-12 col-md-4 col-lg-5 col-xl-4 text-break" id="firstUsableAddress">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
+                    <div class="col-12 col-md-4">/x</div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-10 col-sm-2 fw-bold">Last Usable Address</div>
-                    <div class="col-12 col-sm-8 order-1 order-sm-0" id="lastUsableAddress">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
-                    <div class="col-2 col-sm-2 order-0 order-sm-1">/0</div>
+                    <div class="col-12 col-md-4 col-lg-3 col-xl-4 fw-semibold">Last Usable Address:</div>
+                    <div class="col-12 col-md-4 col-lg-5 col-xl-4 text-break" id="lastUsableAddress">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
+                    <div class="col-12 col-md-4">/x</div>
                 </div>
             </div>
         </main>
 
         <!-- Info section -->
-        <section id="infoSection" class="container-fluid min-vh-100 text-white bg-dark pt-3 mb-5">
+        <section id="infoSection" class="container min-vh-100 text-white bg-dark pt-3 mb-5">
             <h2 class="text-center mb-5">IPv6 Subnetting Program</h2>
             
             <!-- Accordion -->
@@ -129,10 +139,10 @@
                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
                         <div class="accordion-body">
                             <ol class="list-group list-group-numbered list-group-flush bg-dark text-white">
-                                <li class="list-group-item">Enter an IPv6 Address</li>
-                                <li class="list-group-item">Enter a Prefix Length</li>
-                                <li class="list-group-item">Enter the number of bits (or borrowed bits) for subnet portion</li>
-                                <li class="list-group-item">Click the submit button</li>
+                                <li class="list-group-item">Enter an IPv6 Address.</li>
+                                <li class="list-group-item">Enter a Prefix Length.</li>
+                                <li class="list-group-item">Enter the number of bits (or borrowed bits) for subnet portion.</li>
+                                <li class="list-group-item">Click the submit button.</li>
                             </ol>                          
                         </div>
                     </div>
@@ -147,9 +157,10 @@
                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree">
                         <div class="accordion-body">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item">By default the app will display the first subnet (Subnet zero)</li>
-                                <li class="list-group-item">You can find other subnets if available by clicking on the subnet label or the subnet number input next to it</li>
-                                <li class="list-group-item">The Hosts label represents the number of host per subnet</li>
+                                <li class="list-group-item">By default the app will display the <strong>first subnet (Subnet zero).</strong></li>
+                                <li class="list-group-item">You can find other subnets if available by clicking on the subnet label or the subnet number input next to it.</li>
+                                <li class="list-group-item">The <strong>Network(s)</strong> label represents the number of subnets.</li>
+                                <li class="list-group-item">The <strong>Hosts</strong> label represents the number of host per subnet.</li>
                             </ul>
                         </div>
                     </div>
@@ -189,13 +200,13 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
                                         <div class="fw-semibold">IPv6 Address Format</div>
-                                        <small>This option will check if an input address is valid.</small>
+                                        <small>This option will check if an input address is a valid ipv6 address.</small>
                                     </div>                                    
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
                                         <div class="fw-semibold">MAC Address Format</div>
-                                        <small>This option will check if an input address is valid.</small>
+                                        <small>This option will check if an input address is a valid mac address.</small>
                                     </div>                                    
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -271,6 +282,22 @@
                 </div>
             </div>
         </section>
+        <footer class="container">
+            <div class="row">
+                <div class="col mx-auto">
+                    <nav class="navbar navbar-dark bg-transparent">
+                        <div class="container">
+                            <div class="navbar-nav flex-row mx-auto ">
+                                <a class="nav-link mx-1" href="#">Home</a>
+                                <a class="nav-link mx-1" href="https://www.linkedin.com/in/kmfiguerrez/" target="_blank">Contact</a>
+                                <a class="nav-link mx-1" href="https://paypal.me/kmfiguerrez" target="_blank">Donate</a>
+                            </div>
+                        </div>
+                    </nav>
+                    <p class="small text-center ">&copy IPv6 Subnetting 2023 | All Rights Reserved.</p>
+                </div>
+            </div>                                                  
+        </footer>
 
         <!-- Offcanvas Section-->
         <div class="offcanvas offcanvas-start text-white bg-dark" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel" style="width: 250px;">
@@ -402,18 +429,18 @@
         </div>
 
         <!-- Modals Section -->
-        <div class="modal fade" id="offcanvasModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal fade text-dark" id="offcanvasModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">Title</h5>
+                        <h5 class="modal-title fw-semibold" id="modalLabel">Title</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" data-modal-alert="true">
                         <form id="modal-form">
                             <div class="mb-3">
-                                <label id="modal-input-label" for="modal-input" class="col-form-label">Input:</label>
-                                <input type="text" id="modal-input" class="form-control" placeholder="Input" autocomplete="off">
+                                <label id="modal-input-label" for="modal-input" class="col-form-label fw-semibold">Input:</label>
+                                <input type="text" id="modal-input" class="form-control" placeholder="Input" autocomplete="off" style="font-family: 'Roboto Mono', monospace;">
                                 <div class="valid-feedback">
                                     Looks good!
                                 </div> 
@@ -427,8 +454,8 @@
                                 </svg>
                             </button>
                             <div class="mb-3">
-                                <label  id="modal-output-label" for="modal-output" class="col-form-label">Output:</label>
-                                <output id="modal-output" class="d-block border border-1 py-2 px-3 rounded-2 text-muted text-break user-select-all">Output</output>
+                                <label  id="modal-output-label" for="modal-output" class="col-form-label fw-semibold">Output:</label>
+                                <output id="modal-output" class="d-block border border-1 py-2 px-3 rounded-2 text-muted text-break user-select-all" style="font-family: 'Roboto Mono', monospace;">Output</output>
                             </div>                            
                         </form>
                     </div>

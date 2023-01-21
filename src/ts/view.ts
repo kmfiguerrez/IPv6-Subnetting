@@ -7,7 +7,8 @@ const fuac = document.getElementById("firstUsableAddress") as HTMLDivElement;
 // luac means first usable address container.
 const luac = document.getElementById("lastUsableAddress") as HTMLDivElement;
 const hostC = document.getElementById("host") as HTMLSpanElement;
-const outputHeader = document.getElementById("caption") as HTMLParagraphElement;
+// nosc means number of subnets container.
+const nosc = document.getElementById("subnets") as HTMLSpanElement;
 const subnetBitsInput = document.getElementById("subnetBits") as HTMLInputElement;
 
 
@@ -64,7 +65,7 @@ export const render = function (prefix: prefix): void  {
     
     // Displays.
     // Display the number of subnets.
-    outputHeader.textContent = BigInt(subnetBitsInput.value) === 0n ? `There is ${formatNumber(oht)} subnet` : `There are ${formatNumber(oht)} subnets`;
+    nosc.textContent = formatNumber(oht);
     // Display the host per subnet.
     hostC.textContent = formatNumber(hostText);
     // Display the prefix.
@@ -78,6 +79,7 @@ export const render = function (prefix: prefix): void  {
     fuac.nextElementSibling!.textContent = `/${prefix.newPrefixLength}`;
     luac.nextElementSibling!.textContent = `/${prefix.newPrefixLength}`;
 }
+
 
 
 export const renderWarningMessage = function (error: Error, attachTo: HTMLElement, preText="Error", alertType="danger")  {
@@ -95,6 +97,7 @@ export const renderWarningMessage = function (error: Error, attachTo: HTMLElemen
     alert.style.fontSize = "1rem"
 
     // Create a message for alert element.
+    console.log(error instanceof SyntaxError)    
     alert.innerHTML = `<strong>${preText}</strong>: ${error.message}`;
 
     // Create a close button element for alert element.
@@ -110,6 +113,18 @@ export const renderWarningMessage = function (error: Error, attachTo: HTMLElemen
     attachTo.insertAdjacentElement("afterbegin", alert);
 }
 
+export const removeAlertMessage = (container: HTMLElement) => {
+    /**
+     * This function will remove alert message.
+     */
+
+    const firstChild = container.firstElementChild;
+    if (firstChild instanceof HTMLDivElement) {
+        container.removeChild(firstChild);
+    }
+
+}
+
 export const resetModalContent = (modalInput: HTMLInputElement, modalOutput: HTMLOutputElement, modalBody: HTMLElement) => {
     /**
      * This function will resets modal's content.     
@@ -117,21 +132,10 @@ export const resetModalContent = (modalInput: HTMLInputElement, modalOutput: HTM
     
     modalInput.value = "";
     modalOutput.textContent = "Output";
+    modalOutput.classList.remove("border-success");
     modalInput.classList.remove("is-invalid", "is-valid");
 
     // The alert component should not show up in newly opened modal.
-    const firstChild = modalBody.firstElementChild;
-    if (firstChild instanceof HTMLDivElement) {
-        modalBody.removeChild(firstChild);
-    }
+    removeAlertMessage(modalBody);
 }
 
-export const resetFormValidation = (ipv6Address: HTMLInputElement, prefixLength: HTMLInputElement, subnetBits: HTMLInputElement) => {
-    /**
-     * This function will reset main form validation text.
-     */
-
-    ipv6Address.classList.remove("is-invalid", "is-valid");
-    prefixLength.classList.remove("is-invalid", "is-valid");
-    subnetBits.classList.remove("is-invalid", "is-valid");
-}

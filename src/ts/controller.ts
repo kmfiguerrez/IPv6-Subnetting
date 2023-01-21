@@ -1,5 +1,5 @@
 import Prefix from "./ipv6.js";
-import { render, renderWarningMessage, resetModalContent, resetFormValidation} from "./view.js";
+import { render, renderWarningMessage, resetModalContent, removeAlertMessage } from "./view.js";
 
 const ipv6AddressInput = document.getElementById("ipv6Address") as HTMLInputElement;
 const prefixLengthInput = document.getElementById("prefixLength") as HTMLInputElement;
@@ -37,7 +37,7 @@ const checkInputs = function (): boolean | Error {
             // Then add .is-invalid.
             ipv6AddressInput.classList.add("is-invalid");
             // Set error message.
-            errorMessage = "Invalid IPv6 Address Length!";
+            errorMessage = ipv6Address === '' ? "IPv6 addrress field cannot be empty!" : "Invalid IPv6 Address Format!";
             errorCount++;
         }
         // Check the prefix length.
@@ -47,7 +47,7 @@ const checkInputs = function (): boolean | Error {
             // Then add .is-invalid.
             prefixLengthInput.classList.add("is-invalid");
             // Set error message.
-            errorMessage = "Invalid Prefix Length!";
+            errorMessage = prefixLength === '' ? "Prefix length field cannot be empty!" : "Invalid Prefix Length!";
             errorCount++;
         }
         // Check the subnet bits.
@@ -57,7 +57,7 @@ const checkInputs = function (): boolean | Error {
             // Then add .is-invalid.
             subnetBitsInput.classList.add("is-invalid");
             // Set error message.
-            errorMessage = "Invalid Subnet Bits!";
+            errorMessage = subnetBits === '' ? "Subnet bits field cannot be empty!" : "Invalid Subnet Bits!";
             errorCount++;
         }   
         // Check the subnet that is looking for.
@@ -177,7 +177,7 @@ export const modalOperation = (operation: string) => {
      * This function will perform modal's chosen operation.
      * Brackets are added to every case to add lexical scope.
      */
-
+    
     switch (operation) {
         // Conversions operation.        
         case "bin-hex": {
@@ -190,32 +190,39 @@ export const modalOperation = (operation: string) => {
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(result, modalBody);
+                const error = bin === '' ? new Error("Input cannot be empty!") : result;
+                renderWarningMessage(error, modalBody);
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output";
                 break;
             }
 
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = result;
             break;
-        }
-            
+        }            
         case "hex-bin": {
             const hex = modalInput.value.toLowerCase();
             const result = Prefix.hexToBin(hex);
-
+            
             if (result instanceof Error) {
                 // Remove first the .is-valid if it's exists.
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(result, modalBody);
+                const error = modalInput.value === '' ? new Error("Input cannot be empty!") : result;                
+                renderWarningMessage(error, modalBody);
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output";
                 break;
             }
 
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = result;
             break;
         }
@@ -229,12 +236,16 @@ export const modalOperation = (operation: string) => {
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(new Error("Input must be integers!"), modalBody);
+                const error = dec === '' ? new Error("Input cannot be empty!") : new Error("Input must be integers!");
+                renderWarningMessage(error, modalBody);                
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output";                
                 break;
             }
 
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = result;
             break;
         }
@@ -248,12 +259,16 @@ export const modalOperation = (operation: string) => {
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(result, modalBody);
+                const error = bin === '' ? new Error("Input cannot be empty!") : result;
+                renderWarningMessage(error, modalBody);
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output";
                 break;
             }
 
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = result.toString(); 
             break;
         }
@@ -267,12 +282,16 @@ export const modalOperation = (operation: string) => {
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(result, modalBody);
+                const error = hex === '' ? new Error("Input cannot be empty!") : result;
+                renderWarningMessage(error, modalBody);
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output";
                 break;
             }
-
+            
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = result.toString(); 
             break;
         }
@@ -286,12 +305,16 @@ export const modalOperation = (operation: string) => {
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(new Error("Input must be integers!"), modalBody);
+                const error = dec === '' ? new Error("Input cannot be empty!") : new Error("Input must be integers!");
+                renderWarningMessage(error, modalBody);                
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output";                
                 break;
             }
 
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = result;
             break;
         }
@@ -306,12 +329,16 @@ export const modalOperation = (operation: string) => {
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(new Error("Invalid IPv6 Address Format"), modalBody);
+                const error = ipv6 === '' ? new Error("Input cannot be empty!") : new Error("Invalid IPv6 Address Format!");
+                renderWarningMessage(error, modalBody);                 
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output"; 
                 break;
             }
 
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = "Valid IPv6 Address Format.";
             break;
         }
@@ -325,12 +352,16 @@ export const modalOperation = (operation: string) => {
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(new Error("Invalid MAC Address Format"), modalBody);
+                const error = maca === '' ? new Error("Input cannot be empty!") : new Error("Invalid MAC Address Format!");
+                renderWarningMessage(error, modalBody);
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output"; 
                 break;
             }
 
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = "Valid MAC Address Format.";            
             break;
         }
@@ -349,32 +380,47 @@ export const modalOperation = (operation: string) => {
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(result, modalBody);
+                const error = maca === '' ? new Error("Input cannot be empty!") : result;
+                renderWarningMessage(error, modalBody);
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output";
                 break;
             }
-
+            
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = result.toUpperCase();
             break;
         }
         case "ipv6-eui-64": {
             const ipv6Address = ipv6AddressInput.value.toLowerCase();
             const maca = modalInput.value.toLowerCase();
-            const result = Prefix.ipv6_eui64(ipv6Address, maca);
+            const result = Prefix.ipv6_eui64(ipv6Address, maca) as string;
 
-            if (result instanceof Error) {
+            if (ipv6Address === '' || Prefix.ipv6Format(ipv6Address) === false) {
+                // Display error message.
+                const error = ipv6Address === '' ? new Error("Include an IPv6 address in the background!") : new Error("Invalid IPv6 address!");
+                renderWarningMessage(error, modalBody);
+                break;              
+            }
+
+            if (Prefix.macaFormat(maca) === false) {
                 // Remove first the .is-valid if it's exists.
                 modalInput.classList.remove("is-valid");
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(result, modalBody);
+                const error = maca === '' ? new Error("MAC Address field cannot be empty!") : new Error("Invalid MAC Address!");
+                renderWarningMessage(error, modalBody);
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output";
                 break;
             }
 
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = result.toUpperCase();
             break;
         }
@@ -388,12 +434,16 @@ export const modalOperation = (operation: string) => {
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(result, modalBody);
+                const error = ipv6 === '' ? new Error("Input cannot be empty!") : result;
+                renderWarningMessage(error, modalBody);
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output";
                 break;
             }
 
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = result.toUpperCase();
             break;
         }
@@ -407,12 +457,16 @@ export const modalOperation = (operation: string) => {
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(result, modalBody);
+                const error = maca === '' ? new Error("Input cannot be empty!") : result;
+                renderWarningMessage(error, modalBody);
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output";
                 break;
             }
 
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = result.toUpperCase();
             break;
         }
@@ -427,12 +481,16 @@ export const modalOperation = (operation: string) => {
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(result, modalBody);
+                const error = ipv6 === '' ? new Error("Input cannot be empty!") : result;
+                renderWarningMessage(error, modalBody);
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output";
                 break;
             }
 
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = result.toUpperCase();
             break;
         }
@@ -446,12 +504,16 @@ export const modalOperation = (operation: string) => {
                 // Then add .is-invalid.
                 modalInput.classList.add("is-invalid");
                 // Display error message.
-                renderWarningMessage(result, modalBody);
+                const error = ipv6 === '' ? new Error("Input cannot be empty!") : result;
+                renderWarningMessage(error, modalBody);
                 // Reset the output text.
+                modalOutput.classList.remove("border-success");
                 modalOutput.innerText = "Output";
                 break;
             }
 
+            // Otherwise success.
+            modalOutput.classList.add("border-success");
             modalOutput.innerText = result.toUpperCase();
             break;
         }
@@ -477,7 +539,7 @@ export const reverseConversion = () => {
     // Update modal's content.
     modalInputLabel.innerText = input;
     modalOutputLabel.innerText = output;
-
+    
     // Tell the modal's submit button what operation to perform.
     modalSubmitButton.setAttribute("data-modal-operation", conversionType);
     
@@ -486,4 +548,6 @@ export const reverseConversion = () => {
     modalSwitchButton.setAttribute("data-modal-operation", `${conversionTypeArray[1]}-${conversionTypeArray[0]}`);
     modalSwitchButton.setAttribute("data-input", `${output}`);
     modalSwitchButton.setAttribute("data-output", `${input}`);
+
+    
 }

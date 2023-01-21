@@ -396,6 +396,9 @@ export default class Prefix {
          * This method checks if a given character(s) is a 
          * valid hex character.
          */
+        
+        // Check input.
+        if (hex === '') return false;
 
         const validHexChars = [
             "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
@@ -403,7 +406,7 @@ export default class Prefix {
         ]
 
         for (const char of hex) {
-            const isValid = validHexChars.includes(char.toLocaleLowerCase());
+            const isValid = validHexChars.includes(char.toLowerCase());
             
             // If not valid then return false.
             if (!isValid) {                    
@@ -420,6 +423,9 @@ export default class Prefix {
          * This method checks if given character(s) is a valid binary
          * characters.
          */
+
+        // Check input.
+        if (bin === '') return false;
 
         const validBinaryChars = ["0", "1"];
         
@@ -447,8 +453,7 @@ export default class Prefix {
         try {
             // Check input.
             // If char is not valid hex then throw an error.
-            if (!this.isHex(hex)) throw new Error("Invalid Hex character entered!")
-
+            if (!this.isHex(hex)) throw new Error("Invalid Hex character entered!");            
 
             let binaries = "";
 
@@ -544,6 +549,8 @@ export default class Prefix {
              only contains integer characters. Otherwise it will throw
              a syntax error.
             */
+            if (int === '') throw new Error("Input cannot be empty!");
+
             const dec = BigInt(int);
 
             // Convert to binary.
@@ -567,6 +574,7 @@ export default class Prefix {
         try {
             // Check input.
             if (!this.isBinary(bin)) throw new Error("Invalid Binary character entered!");
+            if (bin === '') throw new Error("Input cannot be empty!");
             
             // Convert bin to bigint.
             const dec = BigInt(`0b${bin}`);
@@ -589,6 +597,7 @@ export default class Prefix {
         try {
             // Check input.
             if (!this.isHex(hex)) throw new Error("Invalid Hex character entered!");
+            if (hex === '') throw new Error("Input cannot be empty!");
 
             // Convert hex to bigint.
             const dec = BigInt(`0x${hex}`);
@@ -617,13 +626,14 @@ export default class Prefix {
              only contains integer characters. Otherwise it will throw
              a syntax error.
             */
-             const dec = BigInt(int);
+            if (int === '') throw new Error("Input cannot be empty!");
+            const dec = BigInt(int);
 
-             // Convert to hexadecimals.
-             const hex = dec.toString(16);
+            // Convert to hexadecimals.
+            const hex = dec.toString(16);
  
-             // Return hexadecimals.
-             return hex;
+            // Return hexadecimals.
+            return hex;
 
         } catch (error: any) {
             console.log(error);
