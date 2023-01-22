@@ -35,7 +35,7 @@
         <main class="container min-vh-100 px-0">
             <!-- Form Section -->
             <form class="mb-5">
-                <div class="row g-3 mb-4">
+                <div class="row g-4 mb-4">
                     <div class="col-12">
                         <label for="ipv6Address" class="form-label">IPv6 Address</label>
                         <input type="text" class="form-control" id="ipv6Address" placeholder="" autocomplete="off" style="font-family: 'Roboto Mono', monospace;">
@@ -68,20 +68,16 @@
                     </div>
                 </div>
                 <button id="formButton" class="btn btn-outline-primary">Submit</button>
-                <!-- <div class="d-grid gap-2">
-                    <button id="formButton" class="btn btn-outline-primary">Submit</button>
-                    <button class="btn btn-primary" type="button">Button</button>
-                </div>                           -->
             </form>
 
             <!-- Output Section-->
             <div id="outputSection" class="pb-5">
                 <!-- <h2 id="output-header" class="text-center visually-hidden">OUTPUT</h2> -->
-                <div class="row mb-2">
+                <div class="row mb-0">
                     <div class="col-12 col-md-4">
                         <form>
                             <label for="subnetNumber" class="fw-semibold">Subnet:</label>
-                            <input id="subnetNumber" type="number" class="border-0 bg-transparent text-white" min="0"/>
+                            <input id="subnetNumber" type="number" class="border-0 bg-transparent text-white" min="0" value="0"/>
                         </form> 
                     </div>
                     <div class="col-12 col-md-4">
@@ -91,6 +87,7 @@
                         <span class="fw-semibold">Hosts:</span> <span id="host" class="text-break"></span>
                     </div>
                 </div>
+                <hr class="my-1 mt-0">
                 <div class="row mb-2">
                     <div class="col-12 col-md-4 col-lg-3 col-xl-4 fw-semibold">Prefix:</div>
                     <div class="col-12 col-md-4 col-lg-5 col-xl-4 text-break" id="prefix">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
@@ -158,9 +155,9 @@
                         <div class="accordion-body">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">By default the app will display the <strong>first subnet (Subnet zero).</strong></li>
-                                <li class="list-group-item">You can find other subnets if available by clicking on the subnet label or the subnet number input next to it.</li>
-                                <li class="list-group-item">The <strong>Network(s)</strong> label represents the number of subnets.</li>
-                                <li class="list-group-item">The <strong>Hosts</strong> label represents the number of host per subnet.</li>
+                                <li class="list-group-item">You can find other subnets if available by clicking on the <strong>Subnet label</strong> or the subnet number input next to it.</li>
+                                <li class="list-group-item">The <strong>Network(s) label</strong> represents the number of subnets.</li>
+                                <li class="list-group-item">The <strong>Hosts label</strong> represents the number of host per subnet.</li>
                             </ul>
                         </div>
                     </div>
@@ -200,13 +197,13 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
                                         <div class="fw-semibold">IPv6 Address Format</div>
-                                        <small>This option will check if an input address is a valid ipv6 address.</small>
+                                        <small>This option will determine if an input address is a valid ipv6 address.</small>
                                     </div>                                    
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
                                         <div class="fw-semibold">MAC Address Format</div>
-                                        <small>This option will check if an input address is a valid mac address.</small>
+                                        <small>This option will determine if an input address is a valid mac address.</small>
                                     </div>                                    
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -353,7 +350,7 @@
                                 </li>
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validations" data-modal-operation="mac-format" 
-                                        data-input="Mac Address">
+                                        data-input="MAC Address">
                                         Mac Address Format
                                     </a>
                                 </li>
@@ -376,13 +373,13 @@
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generates" data-modal-operation="interfaceID-eui-64" 
-                                        data-input="Mac Address" data-output="Interface ID">
+                                        data-input="MAC Address" data-output="Interface ID">
                                         Interface ID eui-64
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generates" data-modal-operation="ipv6-eui-64" 
-                                        data-input="Mac Address" data-output="IPv6 Unicast Address">
+                                        data-input="MAC Address" data-output="IPv6 Unicast Address">
                                         IPv6 Address eui-64
                                     </a>
                                 </li>
@@ -394,7 +391,7 @@
                                 </li>
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generates" data-modal-operation="link-local"
-                                        data-input="Mac Address" data-output="Link-Local Unicast Address">
+                                        data-input="MAC Address" data-output="Link-Local Unicast Address">
                                         Link-Local Address eui-64
                                     </a>
                                 </li>
@@ -455,7 +452,14 @@
                             </button>
                             <div class="mb-3">
                                 <label  id="modal-output-label" for="modal-output" class="col-form-label fw-semibold">Output:</label>
-                                <output id="modal-output" class="d-block border border-1 py-2 px-3 rounded-2 text-muted text-break user-select-all" style="font-family: 'Roboto Mono', monospace;">Output</output>
+                                <input  id="modal-output" class="form-control" type="text" value="Output" aria-label="readonly input" style="font-family: 'Roboto Mono', monospace;" readonly>
+                                <div class="valid-feedback">
+                                    Success!
+                                </div> 
+                                <div class="invalid-feedback">
+                                    You're a failure bro!
+                                </div>
+                                <!-- <output id="modal-output" class="d-block border border-1 py-2 px-3 rounded-2 text-muted text-break user-select-all" style="font-family: 'Roboto Mono', monospace;">Output</output> -->
                             </div>                            
                         </form>
                     </div>

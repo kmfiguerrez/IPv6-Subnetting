@@ -4,13 +4,16 @@
 // 2. Include any default variable overrides here
 $accordion-color: white;
 $accordion-bg: #212529;
-$accordion-icon-color: white;
-// $accordion-button-active-bg: #446fa0;
+
+$accordion-border-color: rgba(255,255,255,.3);
 $accordion-button-active-bg: #2c6ab1;
 $accordion-button-active-color: white;
+$accordion-icon-color: rgba(255,255,255,.5);
+$accordion-icon-active-color: white;
 
 $list-group-color: white;
 $list-group-bg: #212529;
+
 
 // 3. Include remainder of required Bootstrap stylesheets
 @import "../../node_modules/bootstrap/scss/variables";
@@ -86,7 +89,7 @@ $utilities: map-merge(
 .btn-toggle:hover,
 .btn-toggle:focus {
   color: rgba(0, 0, 0, 0.85);
-  background-color: #1893e6;
+  background-color: #11649b;
 }
 
 .btn-toggle::before {

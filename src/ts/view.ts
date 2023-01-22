@@ -125,14 +125,14 @@ export const removeAlertMessage = (container: HTMLElement) => {
 
 }
 
-export const resetModalContent = (modalInput: HTMLInputElement, modalOutput: HTMLOutputElement, modalBody: HTMLElement) => {
+export const resetModalContent = (modalInput: HTMLInputElement, modalOutput: HTMLInputElement, modalBody: HTMLElement) => {
     /**
      * This function will resets modal's content.     
      */
     
     modalInput.value = "";
-    modalOutput.textContent = "Output";
-    modalOutput.classList.remove("border-success");
+    modalOutput.value = "Output";
+    modalOutput.classList.remove("is-invalid", "is-valid");
     modalInput.classList.remove("is-invalid", "is-valid");
 
     // The alert component should not show up in newly opened modal.

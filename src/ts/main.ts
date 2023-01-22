@@ -43,7 +43,7 @@ formButton.addEventListener("click", (e) => {
     // By default, display the first subnet(subnet zero).
     
     // Reset Subnet number.
-    subnetNumberInput.value = "";
+    subnetNumberInput.value = "0";
 
     // Reset host value.
     host.innerHTML = "";
