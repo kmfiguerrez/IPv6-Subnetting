@@ -43,7 +43,7 @@
                             Looks Good!
                         </div> 
                         <div class="invalid-feedback">
-                            Invalid IPv6 entry!
+                            Invalid IPv6 Address entry!
                         </div>
                     </div>
                     <div class="col-6">
@@ -76,18 +76,18 @@
                 <div class="row mb-0">
                     <div class="col-12 col-md-4">
                         <form>
-                            <label for="subnetNumber" class="fw-semibold">Subnet:</label>
-                            <input id="subnetNumber" type="number" class="border-0 bg-transparent text-white" min="0" value="0"/>
+                            <label for="subnetNumber" class="fw-semibold" data-bs-toggle="tooltip" data-bs-placement="top" title="Current Subnet">Subnet:</label>
+                            <input id="subnetNumber" type="number" class="border-0 bg-transparent text-white" min="0"/>
                         </form> 
                     </div>
                     <div class="col-12 col-md-4">
-                        <span class="fw-semibold">Network</span><span class="text-muted">(s)</span>: <span id="subnets" class="text-break"></span>
+                        <span class="fw-semibold" data-bs-toggle="tooltip" data-bs-placement="top" title="Number of subnets">Network</span><span class="text-muted">(s)</span>: <span id="subnets" class="text-break"></span>
                     </div>
                     <div class="col-12 col-md-4">
-                        <span class="fw-semibold">Hosts:</span> <span id="host" class="text-break"></span>
+                        <span class="fw-semibold" data-bs-toggle="tooltip" data-bs-placement="top" title="Hosts per subnet">Hosts:</span> <span id="host" class="text-break"></span>
                     </div>
                 </div>
-                <hr class="my-1 mt-0">
+                <hr class="mb-2 mt-0">
                 <div class="row mb-2">
                     <div class="col-12 col-md-4 col-lg-3 col-xl-4 fw-semibold">Prefix:</div>
                     <div class="col-12 col-md-4 col-lg-5 col-xl-4 text-break" id="prefix">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
@@ -155,9 +155,10 @@
                         <div class="accordion-body">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">By default the app will display the <strong>first subnet (Subnet zero).</strong></li>
+                                <li class="list-group-item">The <strong>Subnet label</strong> represents the current subnet.</li>
                                 <li class="list-group-item">You can find other subnets if available by clicking on the <strong>Subnet label</strong> or the subnet number input next to it.</li>
                                 <li class="list-group-item">The <strong>Network(s) label</strong> represents the number of subnets.</li>
-                                <li class="list-group-item">The <strong>Hosts label</strong> represents the number of host per subnet.</li>
+                                <li class="list-group-item">The <strong>Hosts label</strong> represents the number of hosts per subnet.</li>
                             </ul>
                         </div>
                     </div>
@@ -474,7 +475,7 @@
         
     </div>    
     
-    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" type="module"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./src/dist/js/main.js" type="module"></script>
 </body>
 </html>

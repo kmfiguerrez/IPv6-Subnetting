@@ -1,4 +1,5 @@
-import { getPrefix, updateModalContent, modalOperation, reverseConversion } from "./controller.js";
+import { getPrefix, updateModalContent, modalOperation, reverseConversion} from "./controller.js";
+import { popover } from "./view.js";
 
 const formButton = document.getElementById("formButton") as HTMLButtonElement;
 const forms = document.querySelectorAll('form');
@@ -8,7 +9,6 @@ const host = document.getElementById("host") as HTMLSpanElement;
 const modalElement = document.getElementById("offcanvasModal") as HTMLDivElement;
 const modalSubmitButton = document.getElementById("modal-submit-button") as HTMLButtonElement;
 const modalSwitchButton = document.getElementById("modal-switch-button") as HTMLButtonElement;
-
 
 // Event listeners.
 
@@ -43,7 +43,7 @@ formButton.addEventListener("click", (e) => {
     // By default, display the first subnet(subnet zero).
     
     // Reset Subnet number.
-    subnetNumberInput.value = "0";
+    subnetNumberInput.value = "";
 
     // Reset host value.
     host.innerHTML = "";
@@ -62,6 +62,9 @@ subnetNumberInput.addEventListener("change", () => {
 
     // Get the prefix based on subnet number.
     getPrefix(subnetToFind);
+})
+subnetNumberInput.addEventListener("focus", () => {
+    popover.hide();
 })
 
 // Modal event.

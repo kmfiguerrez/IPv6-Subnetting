@@ -1,6 +1,7 @@
 import Prefix from "./ipv6.js";
 import { render, renderWarningMessage, resetModalContent, removeAlertMessage } from "./view.js";
 
+
 const ipv6AddressInput = document.getElementById("ipv6Address") as HTMLInputElement;
 const prefixLengthInput = document.getElementById("prefixLength") as HTMLInputElement;
 const subnetBitsInput = document.getElementById("subnetBits") as HTMLInputElement;
@@ -15,6 +16,9 @@ const modalOutputLabel = document.getElementById("modal-output-label") as HTMLLa
 const modalSwitchButton = document.getElementById("modal-switch-button") as HTMLButtonElement;
 const ipv6TypeSource = document.getElementById("modalSourceLink") as HTMLAnchorElement;
 const modalSubmitButton = document.getElementById("modal-submit-button") as HTMLButtonElement;
+
+
+
 
 const checkInputs = function (): boolean | Error {
     /**

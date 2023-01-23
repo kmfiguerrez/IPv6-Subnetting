@@ -1,4 +1,5 @@
 import type { prefix } from "./ipv6";
+import  bootstrap from 'bootstrap';
 
 // C means container.
 const prefixC = document.getElementById("prefix") as HTMLDivElement;
@@ -9,7 +10,25 @@ const luac = document.getElementById("lastUsableAddress") as HTMLDivElement;
 const hostC = document.getElementById("host") as HTMLSpanElement;
 // nosc means number of subnets container.
 const nosc = document.getElementById("subnets") as HTMLSpanElement;
-const subnetBitsInput = document.getElementById("subnetBits") as HTMLInputElement;
+const networkLabel = document.getElementById("networkLabel") as HTMLSpanElement;
+const subnetNumberInput = document.getElementById("subnetNumber") as HTMLInputElement;
+const hostLabel = document.getElementById("hostLabel") as HTMLSpanElement;
+
+// Create Popover.
+export const popover = new bootstrap.Popover(subnetNumberInput, {        
+    placement: "top",
+    title: "Did you know?",
+    content: "You can change this value to find other subnets if available.",
+    trigger: "manual",    
+})
+// Popover should only be shown once.
+let popMessageShown = false;
+
+// Create Tooltips.
+const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+tooltips.forEach(elem => {
+    new bootstrap.Tooltip(elem);
+})
 
 
 const formatNumber = (num: bigint) => {
@@ -64,6 +83,8 @@ export const render = function (prefix: prefix): void  {
     const luaText = prefix.lastUsableAddress.toLocaleUpperCase();
     
     // Displays.
+    // Display the current subnet.
+    subnetNumberInput.value = snt;
     // Display the number of subnets.
     nosc.textContent = formatNumber(oht);
     // Display the host per subnet.
@@ -78,9 +99,16 @@ export const render = function (prefix: prefix): void  {
     prefixC.nextElementSibling!.textContent = `/${prefix.newPrefixLength}`;
     fuac.nextElementSibling!.textContent = `/${prefix.newPrefixLength}`;
     luac.nextElementSibling!.textContent = `/${prefix.newPrefixLength}`;
+
+    // Popover will pop up once.
+    if ( !popMessageShown ) {
+        // Popover will pop up in 3s.
+        setTimeout(() => {
+            popover.show();
+            popMessageShown = true;
+        }, 3000)        
+    } 
 }
-
-
 
 export const renderWarningMessage = function (error: Error, attachTo: HTMLElement, preText="Error", alertType="danger")  {
     /**
@@ -92,7 +120,7 @@ export const renderWarningMessage = function (error: Error, attachTo: HTMLElemen
     // Create alert element
     const alert = document.createElement("div");
     // Add attributes to alert.
-    alert.setAttribute("class", `alert alert-${alertType} alert-dismissible fade show`);
+    alert.setAttribute("class", `alert alert-${alertType} alert-dismissible fade show mb-5`);
     alert.setAttribute("role", "alert");
     alert.style.fontSize = "1rem"
 
