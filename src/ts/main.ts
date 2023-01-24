@@ -85,11 +85,11 @@ modalElement.addEventListener('show.bs.modal', function (event: any) {
     const outputLabel = (link as HTMLAnchorElement).getAttribute('data-output') as string;
     const modalOperation = (link as HTMLAnchorElement).getAttribute('data-modal-operation') as string;
 
-    // Show modal's source link only in IPv6 Address type feature.
-    const removeModalSourceLink = link.innerText !== "IPv6 Address Type" ? true : false;
+    // Show modal's source link only in IPv6 Address type and Multicast Scope feature.
+    const removeModalSourceLink = link.innerText !== "IPv6 Address Type" && link.innerText !== "Multicast Scope" ? true : false;
     
     // Update the modal's content.
-    updateModalContent(modalTitle, inputLabel, outputLabel, removeModalSourceLink);
+    updateModalContent(modalTitle, inputLabel, outputLabel, removeModalSourceLink, modalOperation);
 
     // Tell the modal's submit button what operation to perform.
     modalSubmitButton.setAttribute("data-modal-operation", modalOperation);

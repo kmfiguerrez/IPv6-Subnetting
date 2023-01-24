@@ -120,12 +120,12 @@ export const renderWarningMessage = function (error: Error, attachTo: HTMLElemen
     // Create alert element
     const alert = document.createElement("div");
     // Add attributes to alert.
-    alert.setAttribute("class", `alert alert-${alertType} alert-dismissible fade show mb-5`);
+    const marginBottom = attachTo.getAttribute("class") as string === "modal-body" ? "mb-3" : "mb-5";
+    alert.setAttribute("class", `alert alert-${alertType} alert-dismissible fade show ${marginBottom}`);
     alert.setAttribute("role", "alert");
     alert.style.fontSize = "1rem"
 
-    // Create a message for alert element.
-    console.log(error instanceof SyntaxError)    
+    // Create a message for alert element.       
     alert.innerHTML = `<strong>${preText}</strong>: ${error.message}`;
 
     // Create a close button element for alert element.

@@ -121,7 +121,7 @@
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                         <div class="accordion-body">
-                            This app can be used to check your work whenever your're learning or practicing IPv6 subnetting. 
+                            This app can be used to check your work whenever your're learning or practicing IPv6 subnetting.                            
                             This app is free for anyone to use.
                         </div>
                     </div>
@@ -172,6 +172,10 @@
                     </h2>
                     <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour">
                         <div class="accordion-body">
+                            <p>
+                                <strong>Note</strong>: These features are within the scope of the CCNA exam or any other
+                                equivalent certification exams.
+                            </p>
                             <h6 class="fw-bold">CONVERSIONS</h6>
                             <ul class="list-group list-group-flush ps-1 mb-3">
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -211,8 +215,13 @@
                                     <div class="ms-2 me-auto">
                                         <div class="fw-semibold">IPv6 Address Type</div>
                                         <small>
-                                            This option will determine whether an ipv6 address is a public
-                                            or private.
+                                            This option will determine these type of addresses:
+                                            <ul>
+                                                <li>Global Unicast Address (Public address).</li>
+                                                <li>Unique Local Unicast Address (Private address).</li>
+                                                <li>Multicast Address.</li>
+                                                <li>Link-Local Unicast Address.</li>
+                                            </ul>
                                         </small>
                                     </div>                                    
                                 </li>
@@ -345,20 +354,26 @@
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validations" data-modal-operation="ipv6-format" 
-                                        data-input="IPv6 Address">
+                                        data-input="IPv6 Address" data-output="Output">
                                         IPv6 Address Format
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validations" data-modal-operation="mac-format" 
-                                        data-input="MAC Address">
+                                        data-input="MAC Address" data-output="Output">
                                         Mac Address Format
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validations" data-modal-operation="ipv6-type"
-                                        data-input="IPv6 Address">
+                                        data-input="IPv6 Address" data-output="Output">
                                         IPv6 Address Type
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Validations" data-modal-operation="multicast-scope"
+                                        data-input="Multicast Address" data-output="Scope Name">
+                                        Multicast Scope
                                     </a>
                                 </li>
                             </ul>
@@ -409,13 +424,13 @@
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Utilities" data-modal-operation="abbreviate" 
-                                        data-input="IPv6 Address">
+                                        data-input="IPv6 Address" data-output="Output">
                                         Abbreviate
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Utilities" data-modal-operation="expand"
-                                        data-input="IPv6 Address">
+                                        data-input="IPv6 Address" data-output="Output">
                                         Expand
                                     </a>
                                 </li>                                
@@ -453,7 +468,7 @@
                             </button>
                             <div class="mb-3">
                                 <label  id="modal-output-label" for="modal-output" class="col-form-label fw-semibold">Output:</label>
-                                <input  id="modal-output" class="form-control" type="text" value="Output" aria-label="readonly input" style="font-family: 'Roboto Mono', monospace;" readonly>
+                                <input  id="modal-output" class="form-control text-break" type="text" value="Output" aria-label="readonly input" style="font-family: 'Roboto Mono', monospace;" readonly>
                                 <div class="valid-feedback">
                                     Success!
                                 </div> 
@@ -465,7 +480,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses" id="modalSourceLink" class="text-decoration-none d-inline-block me-auto link-info" target="_blank">source</a>                       
+                        <a href="" id="modalSourceLink" class="text-decoration-none d-inline-block me-auto link-info" target="_blank">source</a>                       
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" form="modal-form" id="modal-submit-button" class="btn btn-primary">Submit</button>
                     </div>

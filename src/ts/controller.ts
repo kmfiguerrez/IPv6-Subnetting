@@ -14,7 +14,7 @@ const modalInput = document.getElementById("modal-input") as HTMLInputElement;
 const modalOutput = document.getElementById("modal-output") as HTMLInputElement;
 const modalOutputLabel = document.getElementById("modal-output-label") as HTMLLabelElement;
 const modalSwitchButton = document.getElementById("modal-switch-button") as HTMLButtonElement;
-const ipv6TypeSource = document.getElementById("modalSourceLink") as HTMLAnchorElement;
+const anchorElem = document.getElementById("modalSourceLink") as HTMLAnchorElement;
 const modalSubmitButton = document.getElementById("modal-submit-button") as HTMLButtonElement;
 
 
@@ -139,7 +139,8 @@ export const updateModalContent = (
     modalTitle: string, 
     inputLabel: string, 
     outputLabel: string,
-    removeSourceLink: boolean
+    removeSourceLink: boolean,
+    sourcePathFor: string
     ) => {
     /**
      * This function will update modal's content.
@@ -154,16 +155,10 @@ export const updateModalContent = (
     modalInputLabel.textContent = inputLabel;
     // Update the output label.
     modalOutputLabel.textContent = outputLabel;
-
-    if (modalTitle === "Validations" ||  modalTitle === "Utilities") {
-        // Update modal's ouput label.
-        modalOutputLabel.textContent = "Output";
-        // Hide the switch button.
-        modalSwitchButton.classList.remove("visually-hidden");
-        modalSwitchButton.classList.add("visually-hidden");
-    } else if (modalTitle === "Generates") {
-        // Hide the switch button.
-        modalSwitchButton.classList.remove("visually-hidden");
+    
+    // Update the switch button.
+    if (modalTitle !== "Conversions") {
+        // Hide the switch button.        
         modalSwitchButton.classList.add("visually-hidden");
     } else {
         // Otherwise the modal is for conversions, show the switch button.
@@ -173,12 +168,15 @@ export const updateModalContent = (
     // Determine whether to show modal's source link or not.
     if (removeSourceLink) {
         // If the modal isn't about the IPv6 Address type, don't show it.
-        ipv6TypeSource.classList.remove("visible");
-        ipv6TypeSource.classList.add("invisible");
+        anchorElem.classList.remove("visible");
+        anchorElem.classList.add("invisible");
     } else {
         // Otherwise it is about IPv6 Address type, then display the source link.
-        ipv6TypeSource.classList.remove("invisible");
-        ipv6TypeSource.classList.add("visible");
+        anchorElem.classList.remove("invisible");
+        anchorElem.classList.add("visible");
+        // Then update the souce link path.
+        const path = sourcePathFor === "ipv6-type" ? "https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xhtml" : "https://www.rfc-editor.org/rfc/rfc4291.html#page-13";
+        anchorElem.setAttribute("href", `${path}`);
     }
 }
 
@@ -376,7 +374,73 @@ export const modalOperation = (operation: string) => {
             break;
         }
         case "ipv6-type": {
+            const ipv6Address = modalInput.value.toLowerCase();
+            const result = Prefix.addressType(ipv6Address);
+
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");                
+                
+                // Display error message.
+                const errMessage = result.message === "0" ? "The address is outside the scope of this feature." : "Invalid IPv6 Address Format!";
+                const error = ipv6Address === '' ? new Error("Input cannot be empty!") : new Error(`${errMessage}`);
+                if (result.message === "0") {
+                    renderWarningMessage(error, modalBody, "Note", "info");    
+                } else {
+                    // Add .is-invalid.
+                    modalInput.classList.add("is-invalid");
+                    renderWarningMessage(error, modalBody);
+                }                
+                
+                // Reset the output text.
+                modalOutput.classList.remove("is-valid");
+                modalOutput.value = "Output"; 
+                break;
+            }
+
+            // Otherwise success.
+            modalOutput.classList.add("is-valid");
+            modalOutput.value = result;  
+            break;
+        }
+        case "multicast-scope": {
+            const multicastAddress = modalInput.value.toLowerCase();
+            const result = Prefix.multicastScope(multicastAddress);
             
+            if (result instanceof Error) {
+                // Remove first the .is-valid if it's exists.
+                modalInput.classList.remove("is-valid");                
+
+                // Display error message.                
+                let errMessage = "";
+                if (result.message === "r") {
+                    errMessage = "The address is reserved per RFC 4291.";
+                } else if (result.message === "u") {
+                    errMessage = "The address is unassigned per RFC 4291.";
+                } else if (result.message === "nma") {
+                    errMessage = "The address is not a multicast address!";
+                } else {
+                    errMessage = "Invalid IPv6 address format!";
+                }
+
+                const error = multicastAddress === '' ? new Error("Input cannot be empty!") : new Error(`${errMessage}`);
+                if (result.message === "r" || result.message === "u") {
+                    renderWarningMessage(error, modalBody, "Note", "info");    
+                } else {
+                    // Add .is-invalid.
+                    modalInput.classList.add("is-invalid");
+                    renderWarningMessage(error, modalBody);
+                }
+
+                // Reset the output text.
+                modalOutput.classList.remove("is-valid");
+                modalOutput.value = "Output"; 
+                break;
+            }
+
+            // Otherwise success.
+            modalOutput.classList.add("is-valid");
+            modalOutput.value = result;  
             break;
         }
         // Generates operation.

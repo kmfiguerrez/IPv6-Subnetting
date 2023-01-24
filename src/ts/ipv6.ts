@@ -1140,5 +1140,110 @@ export default class Prefix {
     }
 
 
+    static addressType (ipv6Address: string): string | Error {
+        /**
+         * This method will determine if the input address is any of these types:
+         * Global Unicast Address (Public address), Unique Local Unicast Address
+         * (Private Address), Multicast Address and Link-Local Unicast Address.
+         * Global Unicast starts with: 2 or 3.
+         * Unique Local starts with: FD.
+         * Multicasts starts with: FF.
+         * Link-Local starts with: FE80.
+         * This method assumes the input is in lowercase and unabbreviated.
+         */
+
+        try {
+            // Check input.
+            const ipv6LowerCase = ipv6Address.toLowerCase()
+            if (this.ipv6Format(ipv6LowerCase) === false) throw new Error("Invalid IPv6 Address format!");
+            
+            const twoHexReserved = ["02", "00", "fe", "f8", "08", "04"];
+            const oneHexReserved = ["f", "e", "c", "a", "8", "6", "4", "1"];
+            
+            if (ipv6LowerCase.slice(0, 2) === "fd") {
+                return "Unique Local Unicast Address (Private Address)";
+            }
+            else if (ipv6LowerCase.slice(0, 2) === "ff") {
+                return "Multicast Address";
+            }
+            else if (ipv6LowerCase.slice(0, 4) === "fe80") {
+                return "Link-Local Unicast Addresss";
+            }
+            else if (ipv6LowerCase.slice(0, 3) === "fec") {
+                return "Reserved by IETF";
+            }
+            else if (twoHexReserved.includes(ipv6LowerCase.slice(0, 2))) {
+                return "Reserved by IETF";
+            }
+            else if (oneHexReserved.includes(ipv6LowerCase.slice(0, 2))) {
+                return "Reserved by IETF";
+            }
+            else {
+                /*
+                 Otherwise not reserved, then it is a Global unicast address.
+                */
+                return "Global Unicast Address (Public Address)"
+            }
+            
+        } catch (error: any) {
+            console.log(error);
+            return new Error(error.message);
+        }
+    }
+
+
+    static multicastScope (multicastAddress: string): string | Error {
+        /**
+         * This method will determine the scope of the input address.
+         * This method assumes the input is in lowercase.
+         */
+
+        try {
+            // Check Input.
+            if (this.ipv6Format(multicastAddress.toLowerCase()) === false ) throw new Error("Invalid IPv6 Address format!");
+            // nma means not a multicast address.
+            if (multicastAddress.toLowerCase().slice(0, 2) !== "ff") throw new Error("nma");
+
+            let scope = '' // To be returned.
+            const fourthHex = multicastAddress[3].toLowerCase();
+            const reserved4thHex = ["0", "3", "f"];
+            const unassigned4thHex = ["6", "7", "9", "a", "b", "c", "d"];
+
+            // Determine the scope.
+            switch (fourthHex) {
+                case "1":
+                    scope = "Interface-Local"
+                    break;
+                case "2":
+                    scope = "Link-Local"
+                    break;
+                case "4":
+                    scope = "Admin-Local"
+                    break;
+                case "5":
+                    scope = "Site-Local"
+                    break;
+                case "8":
+                    scope = "Organization-Local"
+                    break;
+                case "e":
+                    scope = "Site-Local"
+                    break;               
+            }
+
+            if (reserved4thHex.includes(fourthHex)) {
+                throw new Error("r");
+            } else if (unassigned4thHex.includes(fourthHex)) {
+                throw new Error('u');
+            }
+
+            // Finally return the scople.
+            return scope;
+            
+        } catch (error: any) {
+            console.log(error);
+            return new Error(error.message);
+        }
+    }
 }
 
