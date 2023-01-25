@@ -8,6 +8,7 @@ const subnetBitsInput = document.getElementById("subnetBits") as HTMLInputElemen
 const outputSection = document.getElementById("outputSection") as HTMLDivElement;
 const subnetNumberInput = document.getElementById("subnetNumber") as HTMLInputElement;
 const modalHeading = document.querySelector('.modal-title') as HTMLHeadElement;
+const modalHeadingSub = document.querySelector('#modal-subTitle') as HTMLParagraphElement;
 const modalBody = document.querySelector(".modal-body") as HTMLElement
 const modalInputLabel = document.getElementById("modal-input-label") as HTMLLabelElement;
 const modalInput = document.getElementById("modal-input") as HTMLInputElement;
@@ -120,7 +121,7 @@ export const getPrefix = function (subnetToFind: string="0"): void {
         return;
     }
 
-    const ipv6Value = ipv6AddressInput.value;
+    const ipv6Value = ipv6AddressInput.value.trim();
     const prefixLengthValue = parseInt(prefixLengthInput.value);
     const subnetBitsValue = parseInt(subnetBitsInput.value);
         
@@ -136,7 +137,8 @@ export const getPrefix = function (subnetToFind: string="0"): void {
 }
 
 export const updateModalContent = (
-    modalTitle: string, 
+    modalTitle: string,
+    modalSubTitle: string,
     inputLabel: string, 
     outputLabel: string,
     removeSourceLink: boolean,
@@ -151,6 +153,8 @@ export const updateModalContent = (
 
     // Update the modal title.
     modalHeading.textContent = modalTitle;
+    // Update the modal sub title.
+    modalHeadingSub.textContent = modalSubTitle;
     // Update the input label.
     modalInputLabel.textContent = inputLabel;
     // Update the output label.
@@ -160,9 +164,11 @@ export const updateModalContent = (
     if (modalTitle !== "Conversions") {
         // Hide the switch button.        
         modalSwitchButton.classList.add("visually-hidden");
+        modalSwitchButton.setAttribute("disabled", "")
     } else {
         // Otherwise the modal is for conversions, show the switch button.
-        modalSwitchButton.classList.remove("visually-hidden");        
+        modalSwitchButton.classList.remove("visually-hidden");
+        modalSwitchButton.removeAttribute("disabled")      
     }
 
     // Determine whether to show modal's source link or not.
@@ -189,7 +195,7 @@ export const modalOperation = (operation: string) => {
     switch (operation) {
         // Conversions operation.        
         case "bin-hex": {
-            const bin = modalInput.value;
+            const bin = modalInput.value.trim();
             const result = Prefix.binToHex(bin);
 
             if (result instanceof Error) {
@@ -212,7 +218,7 @@ export const modalOperation = (operation: string) => {
             break;
         }            
         case "hex-bin": {
-            const hex = modalInput.value.toLowerCase();
+            const hex = modalInput.value.trim().toLowerCase();
             const result = Prefix.hexToBin(hex);
             
             if (result instanceof Error) {
@@ -235,7 +241,7 @@ export const modalOperation = (operation: string) => {
             break;
         }
         case "dec-bin": {
-            const dec = modalInput.value;
+            const dec = modalInput.value.trim();
             const result = Prefix.decToBin(dec);
 
             if (result instanceof Error) {
@@ -258,7 +264,7 @@ export const modalOperation = (operation: string) => {
             break;
         }
         case "bin-dec": {
-            const bin = modalInput.value;
+            const bin = modalInput.value.trim();
             const result = Prefix.binToDec(bin);
 
             if (result instanceof Error) {
@@ -281,7 +287,7 @@ export const modalOperation = (operation: string) => {
             break;
         }
         case "hex-dec": {
-            const hex = modalInput.value.toLowerCase();
+            const hex = modalInput.value.trim().toLowerCase();
             const result = Prefix.hexToDec(hex);
 
             if (result instanceof Error) {
@@ -304,7 +310,7 @@ export const modalOperation = (operation: string) => {
             break;
         }
         case "dec-hex": {
-            const dec = modalInput.value;
+            const dec = modalInput.value.trim();
             const result = Prefix.decToHex(dec);
 
             if (result instanceof Error) {
@@ -328,7 +334,7 @@ export const modalOperation = (operation: string) => {
         }
         // Validations operation.
         case "ipv6-format": {
-            const ipv6 = modalInput.value.toLowerCase();
+            const ipv6 = modalInput.value.trim().toLowerCase();
             const result = Prefix.ipv6Format(ipv6);
 
             if (!result) {
@@ -347,11 +353,11 @@ export const modalOperation = (operation: string) => {
 
             // Otherwise success.
             modalOutput.classList.add("is-valid");
-            modalOutput.value = "Valid IPv6 Address Format.";
+            modalOutput.value = "Valid IPv6 Address Format";
             break;
         }
         case "mac-format": {
-            const maca = modalInput.value.toLowerCase();
+            const maca = modalInput.value.trim().toLowerCase();
             const result = Prefix.macaFormat(maca);
 
             if (!result) {
@@ -370,11 +376,11 @@ export const modalOperation = (operation: string) => {
 
             // Otherwise success.
             modalOutput.classList.add("is-valid");
-            modalOutput.value = "Valid MAC Address Format.";            
+            modalOutput.value = "Valid MAC Address Format";            
             break;
         }
         case "ipv6-type": {
-            const ipv6Address = modalInput.value.toLowerCase();
+            const ipv6Address = modalInput.value.trim().toLowerCase();
             const result = Prefix.addressType(ipv6Address);
 
             if (result instanceof Error) {
@@ -404,7 +410,7 @@ export const modalOperation = (operation: string) => {
             break;
         }
         case "multicast-scope": {
-            const multicastAddress = modalInput.value.toLowerCase();
+            const multicastAddress = modalInput.value.trim().toLowerCase();
             const result = Prefix.multicastScope(multicastAddress);
             
             if (result instanceof Error) {
@@ -445,7 +451,7 @@ export const modalOperation = (operation: string) => {
         }
         // Generates operation.
         case "interfaceID-eui-64": {
-            const maca = modalInput.value.toLowerCase();
+            const maca = modalInput.value.trim().toLowerCase();
             const result = Prefix.eui_64(maca);
 
             if (result instanceof Error) {
@@ -468,7 +474,7 @@ export const modalOperation = (operation: string) => {
             break;
         }
         case "ipv6-eui-64": {
-            const ipv6Address = ipv6AddressInput.value.toLowerCase();
+            const ipv6Address = ipv6AddressInput.value.trim().toLowerCase();
             const maca = modalInput.value.toLowerCase();
             const result = Prefix.ipv6_eui64(ipv6Address, maca) as string;
 
@@ -499,7 +505,7 @@ export const modalOperation = (operation: string) => {
             break;
         }
         case "solicited-node":{
-            const ipv6 = modalInput.value.toLowerCase();
+            const ipv6 = modalInput.value.trim().toLowerCase();
             const result = Prefix.solicitedNode(ipv6);
 
             if (result instanceof Error) {
@@ -522,7 +528,7 @@ export const modalOperation = (operation: string) => {
             break;
         }
         case "link-local": {
-            const maca = modalInput.value.toLowerCase();
+            const maca = modalInput.value.trim().toLowerCase();
             const result = Prefix.linkLocal(maca);
 
             if (result instanceof Error) {
@@ -546,7 +552,7 @@ export const modalOperation = (operation: string) => {
         }
         // Utilities operation.
         case "abbreviate": {
-            const ipv6 = modalInput.value.toLowerCase();
+            const ipv6 = modalInput.value.trim().toLowerCase();
             const result = Prefix.abbreviate(ipv6);
 
             if (result instanceof Error) {
@@ -569,7 +575,7 @@ export const modalOperation = (operation: string) => {
             break;
         }
         case "expand": {
-            const ipv6 = modalInput.value.toLowerCase();
+            const ipv6 = modalInput.value.trim().toLowerCase();
             const result = Prefix.expand(ipv6);
 
             if (result instanceof Error) {

@@ -27,15 +27,17 @@ $tooltip-bg: white;
 // Using the utilities API.
 
 
-// make height responsive.
-$utilities: map-merge(
-  $utilities, (
-    "height": map-merge(
-      map-get($utilities, "height"),
-      ( responsive: true ),
-    ),
-  )
-);
+// $utilities: map-merge(
+//   $utilities,
+//   (
+//     "show": (
+//       property: display,
+//       class: show,
+//       responsive: true,
+//       values: (no: none, yes: block),
+//     )
+//   )
+// );
 
 
 // 4. Include any optional Bootstrap components as you like
@@ -92,7 +94,7 @@ $utilities: map-merge(
 .btn-toggle:hover,
 .btn-toggle:focus {
   color: rgba(0, 0, 0, 0.85);
-  background-color: #11649b;
+  background-color: #167cc0;
 }
 
 .btn-toggle::before {
@@ -122,3 +124,4 @@ $utilities: map-merge(
   color: rgba(0, 0, 0, 0.85);
   background-color: #1893e6;
 }
+

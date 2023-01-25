@@ -901,7 +901,7 @@ export default class Prefix {
          * mac address three valid format: colon notation, hyphen notation 
          * and contiguous hexadecimals.
          */
-
+        
         // This will match three valid mac address format.        
         const macaPattern = /^(([a-f0-9]{2}(-|:)?){6})$/i;
                 
@@ -1154,13 +1154,13 @@ export default class Prefix {
 
         try {
             // Check input.
-            const ipv6LowerCase = ipv6Address.toLowerCase()
+            const ipv6LowerCase = (this.expand(ipv6Address) as string).toLowerCase()
             if (this.ipv6Format(ipv6LowerCase) === false) throw new Error("Invalid IPv6 Address format!");
             
             const twoHexReserved = ["02", "00", "fe", "f8", "08", "04"];
             const oneHexReserved = ["f", "e", "c", "a", "8", "6", "4", "1"];
             
-            if (ipv6LowerCase.slice(0, 2) === "fd") {
+            if (ipv6LowerCase.slice(0, 2) === "fd" || ipv6LowerCase.slice(0, 2) === "fc") {
                 return "Unique Local Unicast Address (Private Address)";
             }
             else if (ipv6LowerCase.slice(0, 2) === "ff") {
@@ -1175,7 +1175,7 @@ export default class Prefix {
             else if (twoHexReserved.includes(ipv6LowerCase.slice(0, 2))) {
                 return "Reserved by IETF";
             }
-            else if (oneHexReserved.includes(ipv6LowerCase.slice(0, 2))) {
+            else if (oneHexReserved.includes(ipv6LowerCase.slice(0, 1))) {
                 return "Reserved by IETF";
             }
             else {
@@ -1227,7 +1227,7 @@ export default class Prefix {
                     scope = "Organization-Local"
                     break;
                 case "e":
-                    scope = "Site-Local"
+                    scope = "Global"
                     break;               
             }
 

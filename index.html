@@ -72,7 +72,7 @@
 
             <!-- Output Section-->
             <div id="outputSection" class="pb-5">
-                <!-- <h2 id="output-header" class="text-center visually-hidden">OUTPUT</h2> -->
+                <h2 id="output-header" class="text-center visually-hidden">OUTPUT</h2>
                 <div class="row mb-0">
                     <div class="col-12 col-md-4">
                         <form>
@@ -108,21 +108,22 @@
 
         <!-- Info section -->
         <section id="infoSection" class="container min-vh-100 text-white bg-dark pt-3 mb-5">
-            <h2 class="text-center mb-5">IPv6 Subnetting Program</h2>
-            
+            <h2 class="text-center mb-5">IPv6 Subnetting Program</h2>            
             <!-- Accordion -->
             <div class="accordion accordion-flush text-white" id="accordionExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                            aria-expanded="false" aria-controls="collapseOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                             What's this app is about?
                         </button>
                     </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
                         <div class="accordion-body">
-                            This app can be used to check your work whenever your're learning or practicing IPv6 subnetting.                            
-                            This app is free for anyone to use.
+                            <div class="accordion-body">
+                                This app can be used to check your work whenever your're learning or practicing IPv6 subnetting.                            
+                                This is also useful if you're going for the CCNA exam or any other equivalent certifications.
+                            </div>                          
                         </div>
                     </div>
                 </div>
@@ -172,16 +173,20 @@
                     </h2>
                     <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour">
                         <div class="accordion-body">
-                            <p>
+                            <!-- <p>
                                 <strong>Note</strong>: These features are within the scope of the CCNA exam or any other
                                 equivalent certification exams.
-                            </p>
+                            </p> -->
                             <h6 class="fw-bold">CONVERSIONS</h6>
                             <ul class="list-group list-group-flush ps-1 mb-3">
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
                                         <div class="fw-semibold">Bin to Hex</div>
-                                        <small>This option will convert binaries to hexadecimals and vice versa.</small>
+                                        <small>
+                                            This option will convert binaries to hexadecimals and vice versa.
+                                            <strong>Note</strong> that this option will use nibble (4 bits) for every single hex digit
+                                            and will not omit leading zeros which is useful for ipv6 subnetting.
+                                        </small>
                                     </div>                                    
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -215,7 +220,7 @@
                                     <div class="ms-2 me-auto">
                                         <div class="fw-semibold">IPv6 Address Type</div>
                                         <small>
-                                            This option will determine these type of addresses:
+                                            This option will determine if the input address is one of these type of addresses:
                                             <ul>
                                                 <li>Global Unicast Address (Public address).</li>
                                                 <li>Unique Local Unicast Address (Private address).</li>
@@ -226,7 +231,7 @@
                                     </div>                                    
                                 </li>
                             </ol>
-                            <h6 class="fw-bold">GENERATES</h6>
+                            <h6 class="fw-bold">GENERATORS</h6>
                             <ol class="list-group list-group-flush ps-1 mb-3">
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
@@ -326,19 +331,31 @@
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Conversions"
                                         data-modal-operation="bin-hex" data-input="Binary" data-output="Hexadecimal">
-                                        Bin<i class="bi bi-arrow-left-right mx-2"></i>Hex
+                                        Bin
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-arrow-left-right mx-2 mt-1" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                        </svg>
+                                        Hex
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Conversions"
                                         data-modal-operation="dec-bin" data-input="Decimal" data-output="Binary">
-                                        Dec<i class="bi bi-arrow-left-right mx-2"></i>Bin
+                                        Dec
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-arrow-left-right mx-2 mt-1" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                        </svg>
+                                        Bin
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Conversions"
                                         data-modal-operation="hex-dec" data-input="Hexadecimal" data-output="Decimal">
-                                        Hex<i class="bi bi-arrow-left-right mx-2"></i>Dec
+                                        Hex
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-arrow-left-right mx-2 mt-1" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                        </svg>
+                                        Dec
                                     </a>
                                 </li>
                             </ul>
@@ -383,30 +400,30 @@
                     <li class="mb-1">
                         <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse"
                             data-bs-target="#generates-collapse" aria-expanded="false">
-                            Generates
+                            Generators
                         </button>
                         <div class="collapse" id="generates-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                 <li>
-                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generates" data-modal-operation="interfaceID-eui-64" 
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generators" data-modal-operation="interfaceID-eui-64" 
                                         data-input="MAC Address" data-output="Interface ID">
                                         Interface ID eui-64
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generates" data-modal-operation="ipv6-eui-64" 
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generators" data-modal-operation="ipv6-eui-64" 
                                         data-input="MAC Address" data-output="IPv6 Unicast Address">
                                         IPv6 Address eui-64
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generates" data-modal-operation="solicited-node"
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generators" data-modal-operation="solicited-node"
                                         data-input="IPv6 Unicast Address" data-output="Solicited-Node Multicast Address">
                                         Solicited-Node Address
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generates" data-modal-operation="link-local"
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generators" data-modal-operation="link-local"
                                         data-input="MAC Address" data-output="Link-Local Unicast Address">
                                         Link-Local Address eui-64
                                     </a>
@@ -445,8 +462,11 @@
         <div class="modal fade text-dark" id="offcanvasModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title fw-semibold" id="modalLabel">Title</h5>
+                    <div class="modal-header py-2">
+                        <div>
+                            <h5 class="modal-title fw-semibold" id="modalLabel">Title</h5>
+                            <p id="modal-subTitle" class="mb-0 small">Subtitle</p>
+                        </div>                        
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" data-modal-alert="true">

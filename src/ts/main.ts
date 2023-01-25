@@ -81,6 +81,7 @@ modalElement.addEventListener('show.bs.modal', function (event: any) {
     // Extract info from data-bs-* attributes
     // Get which modal to display and will be used as a title.
     const modalTitle = (link as HTMLAnchorElement).getAttribute('data-modal') as string;
+    const modalSubTitle = link.innerText;
     const inputLabel = (link as HTMLAnchorElement).getAttribute('data-input') as string;
     const outputLabel = (link as HTMLAnchorElement).getAttribute('data-output') as string;
     const modalOperation = (link as HTMLAnchorElement).getAttribute('data-modal-operation') as string;
@@ -89,7 +90,7 @@ modalElement.addEventListener('show.bs.modal', function (event: any) {
     const removeModalSourceLink = link.innerText !== "IPv6 Address Type" && link.innerText !== "Multicast Scope" ? true : false;
     
     // Update the modal's content.
-    updateModalContent(modalTitle, inputLabel, outputLabel, removeModalSourceLink, modalOperation);
+    updateModalContent(modalTitle, modalSubTitle, inputLabel, outputLabel, removeModalSourceLink, modalOperation);
 
     // Tell the modal's submit button what operation to perform.
     modalSubmitButton.setAttribute("data-modal-operation", modalOperation);
