@@ -1,5 +1,5 @@
-import { getPrefix, updateModalContent, modalOperation, reverseConversion} from "./controller.js";
-import { popover } from "./view.js";
+import { getPrefix, updateModalContent, modalOperation, reverseConversion} from "./controller";
+import { popover } from "./view";
 
 const formButton = document.getElementById("formButton") as HTMLButtonElement;
 const forms = document.querySelectorAll('form');

@@ -279,13 +279,21 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
                                         <div class="fw-semibold">Abbreviate</div>
-                                        <small>This option will abbreviate an ipv6 address.</small>
+                                        <small>
+                                            This option will abbreviate an ipv6 address by removing leading zeros in
+                                            each segment and substituting :: (double colons) for a series of two or
+                                            more segments of all 0s.
+                                            
+                                        </small>
                                     </div>                                    
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
                                         <div class="fw-semibold">Expand</div>
-                                        <small>This option will expand an abbreviated ipv6 address.</small>
+                                        <small>
+                                            This option will expand an abbreviated ipv6 address by reversing the process
+                                            of abbreviation.
+                                        </small>
                                     </div>                                    
                                 </li>
                             </ol>                                                        
@@ -511,6 +519,7 @@
     </div>    
     
     <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./src/dist/js/main.js" type="module"></script>
+    <!-- <script src="./src/dist/js/main.js" type="module"></script> -->
+    <script src="./dist/main.bundle.js" type="module"></script>
 </body>
 </html>

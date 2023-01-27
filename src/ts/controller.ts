@@ -1,5 +1,5 @@
-import Prefix from "./ipv6.js";
-import { render, renderWarningMessage, resetModalContent, removeAlertMessage } from "./view.js";
+import Prefix from "./ipv6";
+import { render, renderWarningMessage, resetModalContent } from "./view";
 
 
 const ipv6AddressInput = document.getElementById("ipv6Address") as HTMLInputElement;

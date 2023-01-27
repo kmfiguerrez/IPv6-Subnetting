@@ -1,5 +1,4 @@
 import type { prefix } from "./ipv6";
-import  bootstrap from 'bootstrap';
 
 // C means container.
 const prefixC = document.getElementById("prefix") as HTMLDivElement;
@@ -10,9 +9,8 @@ const luac = document.getElementById("lastUsableAddress") as HTMLDivElement;
 const hostC = document.getElementById("host") as HTMLSpanElement;
 // nosc means number of subnets container.
 const nosc = document.getElementById("subnets") as HTMLSpanElement;
-const networkLabel = document.getElementById("networkLabel") as HTMLSpanElement;
 const subnetNumberInput = document.getElementById("subnetNumber") as HTMLInputElement;
-const hostLabel = document.getElementById("hostLabel") as HTMLSpanElement;
+
 
 // Create Popover.
 export const popover = new bootstrap.Popover(subnetNumberInput, {        
