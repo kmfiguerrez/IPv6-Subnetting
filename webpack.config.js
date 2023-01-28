@@ -1,4 +1,6 @@
 const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: "production",
@@ -8,7 +10,18 @@ module.exports = {
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
-    },   
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: "style.css"
+        }),
+        new HtmlWebpackPlugin({
+            title: "IPv6 Subnetting",
+            filename: "index.html",
+            template: "./src/template.html"
+        })
+    ],
+
     module: {
         rules: [
             {
@@ -20,6 +33,17 @@ module.exports = {
             { 
                 test: /\.js$/, 
                 loader: "source-map-loader" 
+            },
+            {
+                test: /\.scss$/,
+                use: [                  
+                  MiniCssExtractPlugin.loader,
+                  // Translates CSS into CommonJS
+                  "css-loader",
+                  "postcss-loader",
+                  // Compiles Sass to CSS
+                  "sass-loader",
+                ],
             }
         ]
     },      

@@ -1,7 +1,6 @@
 import Prefix from "./ipv6";
 import { render, renderWarningMessage, resetModalContent } from "./view";
 
-
 const ipv6AddressInput = document.getElementById("ipv6Address") as HTMLInputElement;
 const prefixLengthInput = document.getElementById("prefixLength") as HTMLInputElement;
 const subnetBitsInput = document.getElementById("subnetBits") as HTMLInputElement;
@@ -19,8 +18,6 @@ const anchorElem = document.getElementById("modalSourceLink") as HTMLAnchorEleme
 const modalSubmitButton = document.getElementById("modal-submit-button") as HTMLButtonElement;
 
 
-
-
 const checkInputs = function (): boolean | Error {
     /**
      * This function will check user's inputs: ipv6 address, prefix length,
@@ -28,7 +25,7 @@ const checkInputs = function (): boolean | Error {
      */
 
     try {
-        const ipv6Address = ipv6AddressInput.value;
+        const ipv6Address = ipv6AddressInput.value.trim().toLowerCase();
         const prefixLength = prefixLengthInput.value;
         const subnetBits = subnetBitsInput.value;
         const subnetToFind = subnetNumberInput.value;        
@@ -121,7 +118,7 @@ export const getPrefix = function (subnetToFind: string="0"): void {
         return;
     }
 
-    const ipv6Value = ipv6AddressInput.value.trim();
+    const ipv6Value = ipv6AddressInput.value.trim().toLowerCase();
     const prefixLengthValue = parseInt(prefixLengthInput.value);
     const subnetBitsValue = parseInt(subnetBitsInput.value);
         
@@ -475,7 +472,7 @@ export const modalOperation = (operation: string) => {
         }
         case "ipv6-eui-64": {
             const ipv6Address = ipv6AddressInput.value.trim().toLowerCase();
-            const maca = modalInput.value.toLowerCase();
+            const maca = modalInput.value.trim().toLowerCase();
             const result = Prefix.ipv6_eui64(ipv6Address, maca) as string;
 
             if (ipv6Address === '' || Prefix.ipv6Format(ipv6Address) === false) {

@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./src/dist/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;600;700&family=Roboto+Mono:wght@100;300;400&display=swap" rel="stylesheet">
@@ -89,19 +88,19 @@
                 </div>
                 <hr class="mb-2 mt-0">
                 <div class="row mb-2">
-                    <div class="col-12 col-md-4 col-lg-3 col-xl-4 fw-semibold">Prefix:</div>
-                    <div class="col-12 col-md-4 col-lg-5 col-xl-4 text-break" id="prefix">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
-                    <div class="col-12 col-md-4">/x</div>
+                    <div class="col-12 col-md-4 col-lg-4 col-xl-4 fw-semibold">Prefix:</div>
+                    <div class="col-12 col-sm-10 col-md-6 col-lg-5 col-xl-4 text-break" id="prefix">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
+                    <div class="col-12 col-sm-2 col-md-2 col-lg-3 col-xl-4">/x</div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-12 col-md-4 col-lg-3 col-xl-4 fw-semibold">First Usable Address:</div>
-                    <div class="col-12 col-md-4 col-lg-5 col-xl-4 text-break" id="firstUsableAddress">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
-                    <div class="col-12 col-md-4">/x</div>
+                    <div class="col-12 col-md-4 col-lg-4 col-xl-4 fw-semibold">First Usable Address:</div>
+                    <div class="col-12 col-sm-10 col-md-6 col-lg-5 col-xl-4 text-break" id="firstUsableAddress">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
+                    <div class="col-12 col-sm-2 col-md-2 col-lg-3 col-xl-4">/x</div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-12 col-md-4 col-lg-3 col-xl-4 fw-semibold">Last Usable Address:</div>
-                    <div class="col-12 col-md-4 col-lg-5 col-xl-4 text-break" id="lastUsableAddress">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
-                    <div class="col-12 col-md-4">/x</div>
+                    <div class="col-12 col-md-4 col-lg-4 col-xl-4 fw-semibold">Last Usable Address:</div>
+                    <div class="col-12 col-sm-10 col-md-6 col-lg-5 col-xl-4 text-break" id="lastUsableAddress">xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</div>
+                    <div class="col-12 col-sm-2 col-md-2 col-lg-3 col-xl-4">/x</div>
                 </div>
             </div>
         </main>
@@ -183,7 +182,7 @@
                                     <div class="ms-2 me-auto">
                                         <div class="fw-semibold">Bin to Hex</div>
                                         <small>
-                                            This option will convert binaries to hexadecimals and vice versa.
+                                            This option will convert binaries to hexadecimals and vice versa.<br>
                                             <strong>Note</strong> that this option will use nibble (4 bits) for every single hex digit
                                             and will not omit leading zeros which is useful for ipv6 subnetting.
                                         </small>
@@ -518,8 +517,9 @@
         
     </div>    
     
-    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    
     <!-- <script src="./src/dist/js/main.js" type="module"></script> -->
-    <script src="./dist/main.bundle.js" type="module"></script>
+    <!-- <script src="./dist/main.bundle.js" type="module"></script> -->
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

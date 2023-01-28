@@ -14,7 +14,8 @@ const subnetNumberInput = document.getElementById("subnetNumber") as HTMLInputEl
 
 // Create Popover.
 export const popover = new bootstrap.Popover(subnetNumberInput, {        
-    placement: "top",
+    placement: "top",    
+    template: '<div class="popover" role="tooltip"><div class="popover-arrow"></div><h3 class="popover-header mt-0"></h3><div class="popover-body"></div></div>',
     title: "Did you know?",
     content: "You can change this value to find other subnets if available.",
     trigger: "manual",    

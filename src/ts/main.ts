@@ -1,3 +1,4 @@
+import "../sass/style.scss"
 import { getPrefix, updateModalContent, modalOperation, reverseConversion} from "./controller";
 import { popover } from "./view";
 
