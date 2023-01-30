@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
-  "main": "main.ts",
   "scripts": {
     "sass": "sass --watch ./src/sass:./src/dist/css",
     "build": "webpack"

@@ -53,7 +53,7 @@ const checkInputs = function (): boolean | Error {
             errorCount++;
         }
         // Check the subnet bits.
-        if (subnetBitsInput.value === '' || parseInt(subnetBits) < 0 || parseInt(prefixLength) + parseInt(subnetBits) >= 126) {
+        if (subnetBitsInput.value === '' || parseInt(subnetBits) < 0 || parseInt(prefixLength) + parseInt(subnetBits) > 127) {
             // Remove first the .is-valid if it's exists.
             subnetBitsInput.classList.remove("is-valid");
             // Then add .is-invalid.
