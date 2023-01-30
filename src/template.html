@@ -234,22 +234,32 @@
                             <ol class="list-group list-group-flush ps-1 mb-3">
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
-                                        <div class="fw-semibold">Interface ID eui-64</div>
+                                        <div class="fw-semibold">Interface ID</div>
                                         <small>
-                                            This option will generate an interface ID using the eui-64 logic.
+                                            This option will generate an interface ID using the <strong>eui-64</strong> logic.
                                         </small>
                                     </div>                                    
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
-                                        <div class="fw-semibold">IPv6 Address eui-64</div>
+                                        <div class="fw-semibold">IPv6 Address</div>
                                         <small>
-                                            This option will generate an ipv6 unicast address using the eui-64
+                                            This option will generate an ipv6 unicast address using the <strong>eui-64</strong>
                                             logic. The user should include an ipv6 address in the above ipv6 
                                             address field. The user can just put the first 16 hex digits 
                                             (first 64 bits or the network portion) or the complete ipv6 
                                             address then a mac address in the modal window. The output will
                                             be in abbreviated form.
+                                        </small>
+                                    </div>                                    
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-semibold">Link-Local Address</div>
+                                        <small>
+                                            This option will generate a Link-Local Unicast Address using the
+                                            prefix FE8/10 and <strong>eui-64</strong> logic for the interface ID. The output 
+                                            will be in abbreviated form.
                                         </small>
                                     </div>                                    
                                 </li>
@@ -261,17 +271,7 @@
                                             The output will be in abbreviated form.                                            
                                         </small>
                                     </div>                                    
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="fw-semibold">Link-Local Address</div>
-                                        <small>
-                                            This option will generate a Link-Local Unicast Address using the
-                                            prefix FE8/10 and eui-64 logic for the interface ID. The output 
-                                            will be in abbreviated form.
-                                        </small>
-                                    </div>                                    
-                                </li>
+                                </li>                                
                             </ol>
                             <h6 class="fw-bold">UTILITIES</h6>
                             <ol class="list-group list-group-flush list-group ps-1 mb-3">
@@ -414,13 +414,19 @@
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generators" data-modal-operation="interfaceID-eui-64" 
                                         data-input="MAC Address" data-output="Interface ID">
-                                        Interface ID eui-64
+                                        Interface ID
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generators" data-modal-operation="ipv6-eui-64" 
                                         data-input="MAC Address" data-output="IPv6 Unicast Address">
-                                        IPv6 Address eui-64
+                                        IPv6 Address
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generators" data-modal-operation="link-local"
+                                        data-input="MAC Address" data-output="Link-Local Unicast Address">
+                                        Link-Local Address
                                     </a>
                                 </li>
                                 <li>
@@ -428,13 +434,7 @@
                                         data-input="IPv6 Unicast Address" data-output="Solicited-Node Multicast Address">
                                         Solicited-Node Address
                                     </a>
-                                </li>
-                                <li>
-                                    <a href="#offcanvasModal" class="link-light rounded" data-bs-toggle="modal" data-modal="Generators" data-modal-operation="link-local"
-                                        data-input="MAC Address" data-output="Link-Local Unicast Address">
-                                        Link-Local Address eui-64
-                                    </a>
-                                </li>
+                                </li>                                
                             </ul>
                         </div>
                     </li>
