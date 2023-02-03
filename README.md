@@ -1,6 +1,6 @@
 # IPv6 Subnetting
 IPv6 Address subnetting is the process of splitting a network into smaller networks known as Subnets.
-I developed this [app](https://ipv6subnetting.netlify.app/) as one of my personal projects and this can help you whenever your learning or
+I developed this app as one of my personal projects and this can help you whenever your learning or
 practicing ipv6 subnetting.
 
 This is also useful if you're going for the CCNA exam or any other equivalent certifications
@@ -28,6 +28,8 @@ Validations
   - This option will check user's input if it's valid mac address.
 - IPv6 Address type
   - This option will check user's input its type of ipv6 address.
+- Multicast Scope
+  - This option will determine the scope of a multicast address.
 
 Generators
 - Interface ID

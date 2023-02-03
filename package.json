@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "sass": "sass --watch ./src/sass:./src/dist/css",
+    "sass": "sass ./src/sass:./src/dist/css",
     "build": "webpack"
   },
   "repository": {

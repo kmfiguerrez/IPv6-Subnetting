@@ -4,7 +4,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: "production",
-    entry: path.resolve(__dirname, 'src/ts/main.ts'),
+    entry: {
+        main: path.resolve(__dirname, 'src/ts/main.ts'),
+    },
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
     resolve: {
@@ -39,16 +41,16 @@ module.exports = {
                 use: [                  
                   MiniCssExtractPlugin.loader,
                   // Translates CSS into CommonJS
-                  "css-loader",
-                  "postcss-loader",
-                  // Compiles Sass to CSS
-                  "sass-loader",
+                  "css-loader", // Turn the css into js module.
+                  "postcss-loader", // Purge CSS                  
+                  "sass-loader", // Compiles Sass to CSS
                 ],
             }
         ]
     },      
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'main.bundle.js'
+        filename: '[name].js',
+        clean: true
     }
 }

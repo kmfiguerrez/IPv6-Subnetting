@@ -8,10 +8,10 @@ module.exports = {
             safelist: {
               standard: [
                 /offcanvas/, /modal/, /alert/, /popover/, /valid/, /collapsing/, /tooltip/, 
-                /visible/, /invisible/
+                /visible/, /invisible/, /border-success/
               ],
               deep: [/offcanvas/, /modal/, /popover/, /tooltip/],
-              greedy: [/popver$/]              
+              greedy: [/popover$/]              
             }           
         })
       ],

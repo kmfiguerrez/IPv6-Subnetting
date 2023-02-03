@@ -109,7 +109,7 @@ export const render = function (prefix: prefix): void  {
     } 
 }
 
-export const renderWarningMessage = function (error: Error, attachTo: HTMLElement, preText="Error", alertType="danger")  {
+export const renderAlertMessage = function (error: Error, attachTo: HTMLElement, preText="Error", alertType="danger")  {
     /**
      * This method displays error to the user using bootstrap alert component.
      * This method takes an error object and two optional arguments.
@@ -159,7 +159,7 @@ export const resetModalContent = (modalInput: HTMLInputElement, modalOutput: HTM
     
     modalInput.value = "";
     modalOutput.value = "Output";
-    modalOutput.classList.remove("is-invalid", "is-valid");
+    modalOutput.classList.remove("is-valid", "border-success");
     modalInput.classList.remove("is-invalid", "is-valid");
 
     // The alert component should not show up in newly opened modal.
